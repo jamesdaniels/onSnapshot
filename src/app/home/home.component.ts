@@ -9,10 +9,16 @@ import { Observable } from 'rxjs/Observable';
     <ul>
       <li class="text" *ngFor="let article of articles | async">
         <h4>{{ article.title }}</h4>
-        <p>By {{ (article.author | async) | json }}</p>
+        <p>{{ article.publishedAt | date: 'fullDate' }}</p>
+        <p>
+          <span *ngIf="article.author | async; let author; else loadingAuthor">
+            By {{ author.name }}
+          </span>
+        </p>
         {{ article.body }}
       </li>
     </ul>
+    <ng-template #loadingAuthor>&hellip;</ng-template>
   `
 })
 export class HomeComponent implements OnInit {
@@ -21,9 +27,9 @@ export class HomeComponent implements OnInit {
   public articles: Observable<any[]>;
 
   constructor(db: AngularFirestore) {
-    this.articles = db.collection('articles').valueChanges().map(articles =>
+    this.articles = db.collection('articles', ref => ref.orderBy('publishedAt', 'desc')).valueChanges().map(articles =>
       articles.map(article => {
-        // TODO figure out why this isn't working
+        // TODO do this automatically in AngularFire
         article['author'] = db.doc(article['author'].path).valueChanges();
         return article;
       })
