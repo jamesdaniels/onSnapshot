@@ -1,31 +1,54 @@
-# Onsnapshot
+# Angular Universal & Anguar-CLI minimal starter
 
-This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.28.3.
+> This demo is built following the [Angular-CLI Wiki guide](https://github.com/angular/angular-cli/wiki/stories-universal-rendering)
 
-## Development server
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+We're utilizing packages from the [Angular Universal @nguniversal](https://github.com/angular/universal) repo, such as [ng-module-map-ngfactory-loader](https://github.com/angular/universal/tree/master/modules/module-map-ngfactory-loader) to enable Lazy Loading.
 
-## Code scaffolding
+---
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class/module`.
+## Static or Dynamic
+This repo demonstrates the use of 2 different forms of Server Side Rendering.
 
-## Build
+**Static** Also known as "prerendering"
+* Happens at build time
+* Renders your application and replaces the dist index.html with a version rendered at the route `/`.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+**Dynamic**
+* Happens at runtime
+* Uses `ngExpressEngine` to render you application on the fly at the requested url.
 
-## Running unit tests
+---
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Installation
+* `npm install` or `yarn`
 
-## Running end-to-end tests
+---
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
+## Development (Client-side only rendering)
+* run `npm run start` which will start `ng serve` (project served at the standard: localhost:4200)
 
-## Deploying to GitHub Pages
+---
 
-Run `ng github-pages:deploy` to deploy to GitHub Pages.
+## Production 
 
-## Further help
+Depending on whether you're publishing dynamic or static prerendering, run the build command, and then serve up your dist folder assets.
 
-To get more help on the `angular-cli` use `ng help` or go check out the [Angular-CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+> **NOTE**: To deploy your **Static** site to a static hosting platform you will have to deploy the *`dist/browser`* folder, rather than the usual *`dist`*
+
+ie: `npm run build:dynamic` or `npm run build:static`. All of the files that need to be served will be found within the `/dist` folder.
+
+
+
+---
+
+## Testing Universal (dynamic or static) builds -Locally-
+
+**Dynamic** : **`npm run start:dynamic`**
+
+Compiles your application and spins up a Node Express to dynamically serve your Universal application on `http://localhost:4000`.
+
+**Static** : **`npm run start:static`**
+
+- Compiles your application and prerenders your applications files, spinning up a demo http-server so you can view it on `http://127.0.0.1:8080`
+
+
