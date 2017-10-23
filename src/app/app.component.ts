@@ -4,10 +4,7 @@ import { Meta, Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-root',
   template: `
-    <h1>onSnapshot</h1>
-    <a routerLink="/">Home</a>
-    <a routerLink="/lazy">Lazy</a>
-    <a routerLink="/lazy/nested">Lazy_Nested</a>
+    <h1 routerLink="/">onSnapshot</h1>
     <router-outlet></router-outlet>
   `,
   styles: []
