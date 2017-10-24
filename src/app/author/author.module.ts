@@ -14,9 +14,10 @@ import * as firebase from 'firebase/app';
   selector: 'author-view',
   template: `
     <div *ngIf="author$ | async; let author; else loading">
-      <h3>{{ author.name }}</h3>
+      <h2>{{ author.name }}</h2>
       <p>{{ author.bio }}</p>
     </div>
+    <h3>Published Articles</h3>
     <ul *ngIf="articles$ | async; let articles; else loading">
       <li class="text" *ngFor="let article of articles">
         <h4><a [routerLink]="['/articles', article.id]">{{ article.doc.get('title') }}</a></h4>

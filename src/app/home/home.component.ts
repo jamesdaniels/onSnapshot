@@ -8,12 +8,11 @@ import { Observable } from 'rxjs/Observable';
     <p>{{ date | date: 'fullDate' }} | {{ catchphrase }}</p>
     <ul *ngIf="articles$ | async; let articles; else loading">
       <li class="text" *ngFor="let article of articles">
-        <h4><a [routerLink]="['articles', article.id]">{{ article.doc.get('title') }}</a></h4>
-        <p>{{ article.doc.get('publishedAt') | date: 'fullDate' }}</p>
+        <h2><a [routerLink]="['articles', article.id]">{{ article.doc.get('title') }}</a></h2>
         <p>
-          <span *ngIf="article.author | async; let author; else loading">
-            By <a [routerLink]="['authors', author.id]">{{ author.get('name') }}</a>
-          </span>
+          By <span *ngIf="article.author | async; let author; else loading">
+            <a [routerLink]="['authors', author.id]">{{ author.get('name') }}</a>
+          </span> | {{ article.doc.get('publishedAt') | date: 'fullDate' }}
         </p>
       </li>
     </ul>

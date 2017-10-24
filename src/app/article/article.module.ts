@@ -14,19 +14,24 @@ import * as firebase from 'firebase/app';
   selector: 'article-view',
   template: `
     <div *ngIf="article$ | async; let article; else loading">
-      <h3>{{ article.title }}</h3>
+      <h2>{{ article.title }}</h2>
       <p>
-        <span *ngIf="viewCount$ | async; let viewCount; else loading">
-          Viewers {{ viewCount }}
-        </span>
-      </p>
-      <p>
+        By 
         <span *ngIf="article.author | async; let author; else loading">
-          By <a [routerLink]="['/authors', author.id]">{{ author.get('name') }}</a>
+          <a [routerLink]="['/authors', author.id]">{{ author.get('name') }}</a>
         </span>
+        |
+        {{ article.publishedAt | date: 'fullDate' }}
+        |
+        Being read by
+        <span *ngIf="viewCount$ | async; let viewCount; else loadingViwers">
+          {{ viewCount }}
+        </span>
+        viewers
       </p>
       {{ article.body }}
     </div>
+    <ng-template #loadingViwers>1</ng-template>
     <ng-template #loading>&hellip;</ng-template>
   `
 })

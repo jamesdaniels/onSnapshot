@@ -24,7 +24,7 @@ import { environment } from '../environments/environment';
       { path: 'authors/:id', loadChildren: './author/author.module#AuthorModule'}
     ]),
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
+    AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     AngularFireDatabaseModule
   ],
