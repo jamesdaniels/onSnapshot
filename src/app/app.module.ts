@@ -20,7 +20,8 @@ import { environment } from '../environments/environment';
     BrowserModule.withServerTransition({appId: 'my-app'}),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full'},
-      { path: 'articles/:id', loadChildren: './lazy/lazy.module#LazyModule'}
+      { path: 'articles/:id', loadChildren: './article/article.module#ArticleModule'},
+      { path: 'authors/:id', loadChildren: './author/author.module#AuthorModule'}
     ]),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,

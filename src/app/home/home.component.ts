@@ -8,11 +8,11 @@ import { Observable } from 'rxjs/Observable';
     <p>{{ date | date: 'fullDate' }} | {{ catchphrase }}</p>
     <ul *ngIf="articles$ | async; let articles; else loading">
       <li class="text" *ngFor="let article of articles">
-        <h4 [routerLink]="['articles', article.id]">{{ article.doc.get('title') }}</h4>
+        <h4><a [routerLink]="['articles', article.id]">{{ article.doc.get('title') }}</a></h4>
         <p>{{ article.doc.get('publishedAt') | date: 'fullDate' }}</p>
         <p>
           <span *ngIf="article.author | async; let author; else loading">
-            By {{ author.name }}
+            By <a [routerLink]="['authors', author.id]">{{ author.get('name') }}</a>
           </span>
         </p>
       </li>
@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
     this.articles$ = db.collection('articles', ref => ref.orderBy('publishedAt', 'desc')).snapshotChanges().map(articles =>
       articles.map(article => {
         const id = article.payload.doc.id;
-        const author = db.doc(article.payload.doc.get('author').path).valueChanges();
+        const author = db.doc(article.payload.doc.get('author').path).snapshotChanges().map(author => author.payload);
         return { id, author, doc: article.payload.doc };
       })
     )

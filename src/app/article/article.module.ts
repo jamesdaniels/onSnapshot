@@ -11,7 +11,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 
 @Component({
-  selector: 'lazy-view',
+  selector: 'article-view',
   template: `
     <div *ngIf="article$ | async; let article; else loading">
       <h3>{{ article.title }}</h3>
@@ -22,7 +22,7 @@ import * as firebase from 'firebase/app';
       </p>
       <p>
         <span *ngIf="article.author | async; let author; else loading">
-          By {{ author.name }}
+          By <a [routerLink]="['/authors', author.id]">{{ author.get('name') }}</a>
         </span>
       </p>
       {{ article.body }}
@@ -30,21 +30,21 @@ import * as firebase from 'firebase/app';
     <ng-template #loading>&hellip;</ng-template>
   `
 })
-export class LazyComponent {
+export class ArticleComponent {
   public article$: Observable<any>;
   public viewCount$: Observable<any>;
   public visitorRef: firebase.database.Reference | null;
 
   constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, route: ActivatedRoute, afAuth: AngularFireAuth) {
     this.article$ = route.params.switchMap(params => 
-      afs.doc(`articles/${params['id']}`).valueChanges().map(article => {
-        if (article) {
-          // TODO do this automatically in AngularFire
-          article['author'] = afs.doc(article['author'].path).valueChanges();
-        }
-        return article;
-      })
-    );
+      afs.doc(`articles/${params['id']}`).valueChanges()
+    ).map(article => {
+      if (article) {
+        // TODO do this automatically in AngularFire
+        article['author'] = afs.doc(article['author'].path).snapshotChanges().map(author => author.payload);
+      }
+      return article;
+    });
     this.viewCount$ = route.params.switchMap(params => 
       rtdb.object(`articleViewCount/${params['id']}`).valueChanges()
     )
@@ -74,13 +74,13 @@ export class LazyComponent {
 
 
 @NgModule({
-  declarations: [LazyComponent],
+  declarations: [ArticleComponent],
   imports: [
     CommonModule,
     RouterModule.forChild([
-      { path: '', component: LazyComponent, pathMatch: 'full'}
+      { path: '', component: ArticleComponent, pathMatch: 'full'}
     ])
   ]
 })
-export class LazyModule {
+export class ArticleModule {
 }
