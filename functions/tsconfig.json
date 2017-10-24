@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "outDir": ".",
+        "typeRoots": [
+            "node_modules/@types"
+        ]
+    },
+    "files": [
+        "src/index.ts"
+    ]
+}
+  

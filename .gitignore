@@ -4,6 +4,7 @@
 /dist
 /functions/node_modules
 /functions/dist
+/functions/index.js
 /tmp
 
 # dependencies
