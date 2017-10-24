@@ -8,6 +8,8 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth'
 import { AngularFireDatabase } from 'angularfire2/database';
 
+import { MarkdownToHtmlModule } from 'markdown-to-html-pipe';
+
 import * as firebase from 'firebase/app';
 
 @Component({
@@ -29,7 +31,7 @@ import * as firebase from 'firebase/app';
         </span>
         viewers
       </p>
-      {{ article.body }}
+      <div [innerHTML]=" article.body | MarkdownToHtml "></div>
     </div>
     <ng-template #loadingViwers>1</ng-template>
     <ng-template #loading>&hellip;</ng-template>
@@ -81,6 +83,7 @@ export class ArticleComponent {
 @NgModule({
   declarations: [ArticleComponent],
   imports: [
+    MarkdownToHtmlModule,
     CommonModule,
     RouterModule.forChild([
       { path: '', component: ArticleComponent, pathMatch: 'full'}

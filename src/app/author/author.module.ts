@@ -16,6 +16,7 @@ import * as firebase from 'firebase/app';
     <div *ngIf="author$ | async; let author; else loading">
       <h2>{{ author.name }}</h2>
       <p>{{ author.bio }}</p>
+      <img [src]="author.avatarUrl">
     </div>
     <h3>Published Articles</h3>
     <ul *ngIf="articles$ | async; let articles; else loading">
