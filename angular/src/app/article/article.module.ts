@@ -47,7 +47,6 @@ export class ArticleComponent {
       afs.doc(`articles/${params['id']}`).valueChanges()
     ).map(article => {
       if (article) {
-        // TODO do this automatically in AngularFire
         article['author'] = afs.doc(article['author'].path).snapshotChanges().map(author => author.payload);
       }
       return article;
@@ -56,26 +55,19 @@ export class ArticleComponent {
       rtdb.object(`articleViewCount/${params['id']}`).valueChanges()
     )
     Observable.combineLatest(route.params, afAuth.authState).subscribe(([params, authState]) => {
+      if (this.visitorRef) { this.visitorRef.remove() }
       if (authState) {
-        if (this.visitorRef) {
-          this.visitorRef.remove();
-        }
         this.visitorRef = rtdb.database.ref(`articleVisitors/${params['id']}/${authState.uid}`);
         this.visitorRef.onDisconnect().remove();
-        return Observable.fromPromise(this.visitorRef.set(true));
+        this.visitorRef.set(true);
       } else {
-        if (this.visitorRef) {
-          this.visitorRef.remove();
-        }
-        return Observable.fromPromise(afAuth.auth.signInAnonymously());
+        afAuth.auth.signInAnonymously();
       }
     });
   }
 
   ngOnDestroy() {
-    if (this.visitorRef) {
-      this.visitorRef.remove();
-    }
+    if (this.visitorRef) { this.visitorRef.remove() }
   }
 }
 

@@ -6,6 +6,7 @@
 /functions/dist
 /functions/index.js
 /angular/tmp
+/public
 
 # dependencies
 /angular/node_modules
