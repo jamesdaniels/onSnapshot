@@ -21,7 +21,7 @@
     "start:dynamic": "npm run build:dynamic && npm run serve:dynamic",
     "start:static": "npm run build:static && npm run serve:static",
     "build": "ng build",
-    "build:client-and-server-bundles": "ng build --prod --aot && ng build --prod --app 1 --output-hashing=false",
+    "build:client-and-server-bundles": "ng build --prod && ng build --prod --app 1 --output-hashing=false",
     "build:static": "npm run build:client-and-server-bundles && npm run webpack:server && npm run generate:static",
     "build:dynamic": "npm run build:client-and-server-bundles && npm run webpack:server",
     "generate:static": "cd dist && node prerender",
@@ -48,6 +48,7 @@
     "firebase": "^4.6.0",
     "markdown-to-html-pipe": "^1.2.3",
     "rxjs": "^5.4.2",
+    "xmlhttprequest": "^1.8.0",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
@@ -59,6 +60,7 @@
     "http-server": "^0.10.0",
     "reflect-metadata": "^0.1.10",
     "ts-loader": "^2.3.7",
-    "typescript": "~2.3.3"
+    "typescript": "~2.3.3",
+    "webpack-node-externals": "^1.6.0"
   }
 }
