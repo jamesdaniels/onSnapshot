@@ -25,5 +25,6 @@ app.set('view engine', 'html');
 app.set('views', './dist/browser');
 
 app.get('**', (req, res) => {
+    res.set('Cache-Control', 'public, max-age=600, s-maxage=1200');
     res.render('index', { req });
 });

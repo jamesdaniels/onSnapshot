@@ -12,5 +12,4 @@ export const viewCounter = functions.database.ref('/articleVisitors/{articleId}/
 });
 
 const app = require('./dist/firebase').app;
-
 export const angularUniversal = functions.https.onRequest(app);
