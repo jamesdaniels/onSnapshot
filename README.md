@@ -1,4 +1,4 @@
-# Angular Universal & Anguar-CLI minimal starter
+# Angular Universal & Angular-CLI minimal starter
 
 > This demo is built following the [Angular-CLI Wiki guide](https://github.com/angular/angular-cli/wiki/stories-universal-rendering)
 

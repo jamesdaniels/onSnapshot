@@ -1,0 +1,13 @@
+<p>{{ date | date: 'fullDate' }} | {{ catchphrase }}</p>
+<ul *ngIf="articles$ | async; let articles; else loading">
+  <li class="text" *ngFor="let article of articles">
+    <h4 [routerLink]="['articles', article.id]">{{ article.doc.get('title') }}</h4>
+    <p>{{ article.doc.get('publishedAt') | date: 'fullDate' }}</p>
+    <p>
+      <span *ngIf="article.author | async; let author; else loading">
+        By {{ author.name }}
+      </span>
+    </p>
+  </li>
+</ul>
+<ng-template #loading>&hellip;</ng-template>
