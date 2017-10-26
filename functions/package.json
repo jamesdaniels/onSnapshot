@@ -5,5 +5,8 @@
     "firebase-admin": "~5.4.0",
     "firebase-functions": "^0.7.0"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "typescript": "^2.3.4"
+  }
 }

@@ -6,7 +6,7 @@
   "apps": [
     {
       "root": "src",
-      "outDir": "dist",
+      "outDir": "dist/browser",
       "assets": [
         "assets",
         "favicon.ico"
@@ -31,15 +31,20 @@
     {
       "platform": "server",
       "root": "src",
-      "outDir": "functions/dist",
-      "assets": [],
+      "outDir": "dist/server",
+      "assets": [
+        "assets",
+        "favicon.ico"
+      ],
       "index": "index.html",
       "main": "main.server.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.server.json",
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
-      "styles": ["styles.scss"],
+      "styles": [
+        "styles.css"
+      ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
@@ -73,7 +78,7 @@
     }
   },
   "defaults": {
-    "styleExt": "scss",
+    "styleExt": "css",
     "component": {
       "spec": false,
       "inlineStyle": true,

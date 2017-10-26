@@ -17,17 +17,10 @@
   ],
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "start:dynamic": "npm run build:dynamic && npm run serve:dynamic",
-    "start:static": "npm run build:static && npm run serve:static",
-    "build": "ng build",
-    "build:client-and-server-bundles": "ng build --prod --aot && ng build --prod --app 1 --output-hashing=false",
-    "build:static": "npm run build:client-and-server-bundles && npm run webpack:server && npm run generate:static",
-    "build:dynamic": "npm run build:client-and-server-bundles && npm run webpack:server",
-    "generate:static": "cd dist && node prerender",
-    "webpack:server": "webpack --config webpack.server.config.js --progress --colors",
-    "serve:static": "cd dist/browser && http-server",
-    "serve:dynamic": "node dist/server"
+    "start": "npm run build && npm run serve",
+    "build": "ng build --aot --prod && ng build --prod --app 1 --output-hashing=false && webpack --config webpack.server.config.js --progress --colors",
+    "build:firebase": "npm run build && rm -rf ../public ../functions/dist && cp -r dist/browser ../public && rm ../public/index.html && cp -r dist ../functions/",
+    "serve": "node dist/server"
   },
   "private": true,
   "dependencies": {
@@ -46,7 +39,9 @@
     "angularfire2": "^5.0.0-rc.3",
     "core-js": "^2.4.1",
     "firebase": "^4.6.0",
+    "markdown-to-html-pipe": "^1.2.3",
     "rxjs": "^5.4.2",
+    "xmlhttprequest": "^1.8.0",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {

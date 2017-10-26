@@ -4,7 +4,20 @@ import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'home',
-  templateUrl: './home.component.html'
+  template: `
+    <p>{{ date | date: 'fullDate' }} | {{ catchphrase }}</p>
+    <ul *ngIf="articles$ | async; let articles; else loading">
+      <li class="text" *ngFor="let article of articles">
+        <h2><a [routerLink]="['articles', article.id]">{{ article.doc.get('title') }}</a></h2>
+        <p>
+          By <span *ngIf="article.author | async; let author; else loading">
+            <a [routerLink]="['authors', author.id]">{{ author.get('name') }}</a>
+          </span> | {{ article.doc.get('publishedAt') | date: 'fullDate' }}
+        </p>
+      </li>
+    </ul>
+    <ng-template #loading>&hellip;</ng-template>
+  `
 })
 export class HomeComponent implements OnInit {
   public date: Date;
@@ -15,7 +28,7 @@ export class HomeComponent implements OnInit {
     this.articles$ = db.collection('articles', ref => ref.orderBy('publishedAt', 'desc')).snapshotChanges().map(articles =>
       articles.map(article => {
         const id = article.payload.doc.id;
-        const author = db.doc(article.payload.doc.get('author').path).valueChanges();
+        const author = db.doc(article.payload.doc.get('author').path).snapshotChanges().map(author => author.payload);
         return { id, author, doc: article.payload.doc };
       })
     )

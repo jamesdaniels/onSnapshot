@@ -7,21 +7,22 @@ module.exports = {
   entry: {
     // This is our Express server for Dynamic universal
     server: './server.ts',
-    // This is an example of Static prerendering (generative)
-    prerender: './prerender.ts'
+    firebase: './firebase.ts'
   },
   target: 'node',
-  resolve: { extensions: ['.ts', '.js'] },
+  resolve: { extensions: ['.tsx', '.ts', '.js'] },
   // Make sure we include all node_modules etc
   externals: [/(node_modules|main\..*\.js)/,],
   output: {
     // Puts the output at the root of the dist folder
     path: path.join(__dirname, 'dist'),
+    library: 'app',
+    libraryTarget: 'umd',
     filename: '[name].js'
   },
   module: {
     rules: [
-      { test: /\.ts$/, loader: 'ts-loader' }
+      { test: /\.tsx?$/, loader: 'ts-loader' }
     ]
   },
   plugins: [
