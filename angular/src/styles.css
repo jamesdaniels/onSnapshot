@@ -7,7 +7,7 @@ a, a:visited, a:hover {
 }
 
 body {
-  border-top: 16px solid #ffa100;
+  border-top: 16px solid #209bc7;
   color: rgba(0,0,0,0.87);
   font-family: Roboto, Helvetica, Arial, sans-serif;
   font-size: calc(15px + 7 * ((100vw - 500px) / 900));
@@ -32,7 +32,7 @@ ul {
 .hn-nb {
   display: flex;
   justify-content: space-between;
-  padding: 20px 0px;
+  padding: 20px 0;
 }
 
 .hn-hi {

@@ -5,6 +5,31 @@ import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'home',
   template: `
+    <div class="hn-lc">
+
+      <nav class="hn-nb">
+        <div class="hn-hi">
+          <a routerLink="/">
+            <img height="64" width="64" alt="onSnapshot Logo" src="assets/images/onSnapshot_logo.png" />
+          </a>
+        </div>
+
+        <ul class="hn-nl">
+          <li>
+            <a href="/news">NEWS</a>
+          </li>
+          <li>
+            <a href="/ask">ASK</a>
+          </li>
+          <li>
+            <a href="/show">SHOW</a>
+          </li>
+          <li>
+            <a href="/jobs">JOBS</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
     <p>{{ date | date: 'fullDate' }} | {{ catchphrase }}</p>
     <ul *ngIf="articles$ | async; let articles; else loading">
       <li class="text" *ngFor="let article of articles">

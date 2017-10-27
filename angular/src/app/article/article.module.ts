@@ -1,14 +1,14 @@
-import { NgModule, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs/Rx';
+import {NgModule, Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterModule} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
+import {Observable, Subscription} from 'rxjs/Rx';
 
-import { AngularFirestore } from 'angularfire2/firestore';
-import { AngularFireAuth } from 'angularfire2/auth'
-import { AngularFireDatabase } from 'angularfire2/database';
+import {AngularFirestore} from 'angularfire2/firestore';
+import {AngularFireAuth} from 'angularfire2/auth'
+import {AngularFireDatabase} from 'angularfire2/database';
 
-import { MarkdownToHtmlModule } from 'markdown-to-html-pipe';
+import {MarkdownToHtmlModule} from 'markdown-to-html-pipe';
 
 import * as firebase from 'firebase/app';
 
@@ -18,7 +18,7 @@ import * as firebase from 'firebase/app';
     <div *ngIf="article$ | async; let article; else loading">
       <h2>{{ article.title }}</h2>
       <p>
-        By 
+        By
         <span *ngIf="article.author | async; let author; else loading">
           <a [routerLink]="['/authors', author.id]">{{ author.get('name') }}</a>
         </span>
@@ -43,7 +43,7 @@ export class ArticleComponent {
   public visitorRef: firebase.database.Reference | null;
 
   constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, route: ActivatedRoute, afAuth: AngularFireAuth) {
-    this.article$ = route.params.switchMap(params => 
+    this.article$ = route.params.switchMap(params =>
       afs.doc(`articles/${params['id']}`).valueChanges()
     ).map(article => {
       if (article) {
@@ -51,11 +51,13 @@ export class ArticleComponent {
       }
       return article;
     });
-    this.viewCount$ = route.params.switchMap(params => 
+    this.viewCount$ = route.params.switchMap(params =>
       rtdb.object(`articleViewCount/${params['id']}`).valueChanges()
-    )
+    );
     Observable.combineLatest(route.params, afAuth.authState).subscribe(([params, authState]) => {
-      if (this.visitorRef) { this.visitorRef.remove() }
+      if (this.visitorRef) {
+        this.visitorRef.remove()
+      }
       if (authState) {
         this.visitorRef = rtdb.database.ref(`articleVisitors/${params['id']}/${authState.uid}`);
         this.visitorRef.onDisconnect().remove();
@@ -67,7 +69,9 @@ export class ArticleComponent {
   }
 
   ngOnDestroy() {
-    if (this.visitorRef) { this.visitorRef.remove() }
+    if (this.visitorRef) {
+      this.visitorRef.remove();
+    }
   }
 }
 
@@ -78,7 +82,7 @@ export class ArticleComponent {
     MarkdownToHtmlModule,
     CommonModule,
     RouterModule.forChild([
-      { path: '', component: ArticleComponent, pathMatch: 'full'}
+      {path: '', component: ArticleComponent, pathMatch: 'full'}
     ])
   ]
 })
