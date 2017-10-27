@@ -25,7 +25,7 @@ import * as firebase from 'firebase/app';
         </div>
       </nav>
       
-      <section>
+      <main>
         <hr class="header-divider" />
         <div class="author-details" *ngIf="author$ | async; let author; else loading">
           <div class="author-avatar" *ngIf="author.avatarUrl">
@@ -45,16 +45,16 @@ import * as firebase from 'firebase/app';
             </div>
             <div class="hn-sd">
               <h4>
-                <a [routerLink]="['articles', article.id]">{{ article.doc.get('title') }}</a>
+                <a [routerLink]="['/articles', article.id]">{{ article.doc.get('title') }}</a>
               </h4>
               <div class="hn-sm">
-                published at {{ article.doc.get('publishedAt') | date: 'fullDate' }}
+                published {{ article.doc.get('publishedAt') | date: 'fullDate' }}
               </div>
             </div>
           </article>
         </section>
         <ng-template #loading>&hellip;</ng-template>
-      </section>
+      </main>
     </div>
   `
 })
