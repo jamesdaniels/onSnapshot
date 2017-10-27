@@ -6,7 +6,6 @@ import {Observable} from 'rxjs/Observable';
   selector: 'home',
   template: `
     <div class="hn-lc">
-
       <nav class="hn-nb">
         <div class="hn-hi">
           <a routerLink="/">
@@ -16,17 +15,8 @@ import {Observable} from 'rxjs/Observable';
         <div class="hn-nl">
           {{ date | date: 'fullDate' }} | {{ catchphrase }}
         </div>
-        <!--
-        <ul class="hn-nl">
-          <li>
-            <a href="/">ARTICLES</a>
-          </li>
-          <li>
-            <a href="/authors">AUTHORS</a>
-          </li>
-        </ul>
-        -->
       </nav>
+      
       <section class="hn-sl" *ngIf="articles$ | async; let articles; else loading">
         <article *ngFor="let article of articles; let idx = index">
           <div class="hn-sr">
