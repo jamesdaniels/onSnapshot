@@ -106,7 +106,7 @@ ul {
 }
 
 /** stories.css **/
-.hn-sl > section {
+.hn-sl > article {
   border-bottom: 1px solid rgba(239, 239, 239, .8);
   display: flex;
   padding: 1rem 0;

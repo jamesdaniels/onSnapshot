@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
+import {Component, OnInit} from '@angular/core';
+import {AngularFirestore} from 'angularfire2/firestore';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'home',
@@ -10,38 +10,43 @@ import { Observable } from 'rxjs/Observable';
       <nav class="hn-nb">
         <div class="hn-hi">
           <a routerLink="/">
-            <img height="64" width="64" alt="onSnapshot Logo" src="assets/images/onSnapshot_logo.png" />
+            <img height="64" width="64" alt="onSnapshot Logo" src="assets/images/onSnapshot_logo.png"/>
           </a>
         </div>
-
+        <div class="hn-nl">
+          {{ date | date: 'fullDate' }} | {{ catchphrase }}
+        </div>
+        <!--
         <ul class="hn-nl">
           <li>
-            <a href="/news">NEWS</a>
+            <a href="/">ARTICLES</a>
           </li>
           <li>
-            <a href="/ask">ASK</a>
-          </li>
-          <li>
-            <a href="/show">SHOW</a>
-          </li>
-          <li>
-            <a href="/jobs">JOBS</a>
+            <a href="/authors">AUTHORS</a>
           </li>
         </ul>
+        -->
       </nav>
+      <section class="hn-sl" *ngIf="articles$ | async; let articles; else loading">
+        <article *ngFor="let article of articles; let idx = index">
+          <div class="hn-sr">
+            <h2>{{ idx+1 }}</h2>
+          </div>
+          <div class="hn-sd">
+            <h4>
+              <a [routerLink]="['articles', article.id]">{{ article.doc.get('title') }}</a>
+            </h4>
+            <div class="hn-sm">
+              by <span *ngIf="article.author | async; let author; else loading">
+                <a [routerLink]="['authors', author.id]">{{ author.get('name') }}</a>
+              </span>
+              {{ article.doc.get('publishedAt') | date: 'fullDate' }}
+            </div>
+          </div>
+        </article>
+      </section>
+      <ng-template #loading>&hellip;</ng-template>
     </div>
-    <p>{{ date | date: 'fullDate' }} | {{ catchphrase }}</p>
-    <ul *ngIf="articles$ | async; let articles; else loading">
-      <li class="text" *ngFor="let article of articles">
-        <h2><a [routerLink]="['articles', article.id]">{{ article.doc.get('title') }}</a></h2>
-        <p>
-          By <span *ngIf="article.author | async; let author; else loading">
-            <a [routerLink]="['authors', author.id]">{{ author.get('name') }}</a>
-          </span> | {{ article.doc.get('publishedAt') | date: 'fullDate' }}
-        </p>
-      </li>
-    </ul>
-    <ng-template #loading>&hellip;</ng-template>
   `
 })
 export class HomeComponent implements OnInit {
@@ -54,7 +59,7 @@ export class HomeComponent implements OnInit {
       articles.map(article => {
         const id = article.payload.doc.id;
         const author = db.doc(article.payload.doc.get('author').path).snapshotChanges().map(author => author.payload);
-        return { id, author, doc: article.payload.doc };
+        return {id, author, doc: article.payload.doc};
       })
     )
   }
