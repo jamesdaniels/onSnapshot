@@ -112,6 +112,9 @@ ul {
   display: flex;
   padding: 1rem 0;
 }
+.hn-sl > article:hover {
+  background-color: rgba(0,0,0,.04);
+}
 
 .hn-sr {
   padding: 15px;

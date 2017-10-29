@@ -21,7 +21,7 @@ import * as firebase from 'firebase/app';
           </a>
         </div>
         <div class="hn-nl">
-          {{ date | date: 'fullDate' }} | {{ catchphrase }}
+          {{ date | date: 'fullDate' }}
         </div>
       </nav>
       
