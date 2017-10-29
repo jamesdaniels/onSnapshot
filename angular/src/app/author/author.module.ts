@@ -9,6 +9,7 @@ import {AngularFireAuth} from 'angularfire2/auth'
 import {AngularFireDatabase} from 'angularfire2/database';
 
 import * as firebase from 'firebase/app';
+import {NavComponent} from "../nav/nav.component";
 
 @Component({
   selector: 'author-view',
@@ -20,9 +21,15 @@ import * as firebase from 'firebase/app';
             <img height="64" width="64" alt="onSnapshot Logo" src="assets/images/onSnapshot_logo.png"/>
           </a>
         </div>
-        <div class="ons-nl">
-          {{ date | date: 'fullDate' }}
-        </div>
+        
+        <ul class="ons-nl">
+          <li>
+            <a href="/?hot">HOT</a>
+          </li>
+          <li>
+            <a href="/?fresh">FRESH</a>
+          </li>
+        </ul>
       </nav>
       
       <main>
@@ -94,7 +101,8 @@ export class AuthorComponent implements OnInit {
     CommonModule,
     RouterModule.forChild([
       {path: '', component: AuthorComponent, pathMatch: 'full'}
-    ])
+    ]),
+    NavComponent
   ]
 })
 export class AuthorModule {

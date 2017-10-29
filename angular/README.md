@@ -1,4 +1,4 @@
-# Angular Universal & Angular-CLI minimal starter
+# onSnapshot
 
 > This demo is built following the [Angular-CLI Wiki guide](https://github.com/angular/angular-cli/wiki/stories-universal-rendering)
 

@@ -12,9 +12,15 @@ import {Observable} from 'rxjs/Observable';
             <img height="64" width="64" alt="onSnapshot Logo" src="assets/images/onSnapshot_logo.png"/>
           </a>
         </div>
-        <div class="ons-nl">
-          {{ date | date: 'fullDate' }}
-        </div>
+
+        <ul class="ons-nl">
+          <li>
+            <a href="/?hot">HOT</a>
+          </li>
+          <li>
+            <a href="/?fresh">FRESH</a>
+          </li>
+        </ul>
       </nav>
       
       <section class="ons-sl" *ngIf="articles$ | async; let articles; else loading">
@@ -30,7 +36,7 @@ import {Observable} from 'rxjs/Observable';
               by <span *ngIf="article.author | async; let author; else loading">
                 <a [routerLink]="['authors', author.id]">{{ author.get('name') }}</a>
               </span>
-              {{ article.doc.get('publishedAt') | date: 'fullDate' }}
+              {{ article.doc.get('publishedAt') | date: 'short' }}
             </div>
           </div>
         </article>

@@ -41,10 +41,14 @@ ul {
 
 .ons-nl {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   color: rgba(0,0,0,.86);
+}
+
+.ons-nl li {
+  padding: 12px 24px;
 }
 
 .ons-nl li a {
@@ -155,8 +159,13 @@ ul {
 }
 
 /** custom **/
+.header-divider, .author-divider {
+  height: 6px;
+  background: url(/assets/images/hr-styled.png) repeat-x 0 0;
+  border: 0;
+}
+
 .header-divider {
-  border-color: rgba(0,0,0,.12);
   margin: 0 0 24px 0;
 }
 
@@ -180,7 +189,6 @@ ul {
 }
 
 .author-divider {
-  border-color: rgba(0,0,0,.12);
   margin: 24px 0;
 }
 
@@ -217,4 +225,9 @@ ul {
 .article-text {
   font-size: 16px;
   margin-top: 24px;
+}
+
+app-nav {
+  display: block;
+  flex: 1 0;
 }

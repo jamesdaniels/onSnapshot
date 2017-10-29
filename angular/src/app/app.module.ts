@@ -10,11 +10,12 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { environment } from '../environments/environment';
+import {NavComponent} from "./nav/nav.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'my-app'}),
@@ -24,7 +25,7 @@ import { environment } from '../environments/environment';
       { path: 'authors/:id', loadChildren: './author/author.module#AuthorModule'}
     ]),
     AngularFireModule.initializeApp(environment.firebase),
-    //AngularFirestoreModule.enablePersistence(), TODO fix this uncaught exception
+    // AngularFirestoreModule.enablePersistence(), TODO fix this uncaught exception
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireDatabaseModule
