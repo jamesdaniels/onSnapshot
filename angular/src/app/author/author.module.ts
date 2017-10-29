@@ -13,14 +13,14 @@ import * as firebase from 'firebase/app';
 @Component({
   selector: 'author-view',
   template: `
-    <div class="hn-lc">
-      <nav class="hn-nb">
-        <div class="hn-hi">
+    <div class="ons-lc">
+      <nav class="ons-nb">
+        <div class="ons-hi">
           <a routerLink="/">
             <img height="64" width="64" alt="onSnapshot Logo" src="assets/images/onSnapshot_logo.png"/>
           </a>
         </div>
-        <div class="hn-nl">
+        <div class="ons-nl">
           {{ date | date: 'fullDate' }}
         </div>
       </nav>
@@ -38,16 +38,16 @@ import * as firebase from 'firebase/app';
         </div>
         <hr class="author-divider" />
         <h3 class="articles-header">Published Articles</h3>
-        <section class="hn-sl" *ngIf="articles$ | async; let articles; else loading">
+        <section class="ons-sl" *ngIf="articles$ | async; let articles; else loading">
           <article *ngFor="let article of articles; let idx = index">
-            <div class="hn-sr">
+            <div class="ons-sr">
               <h2>{{ idx+1 }}</h2>
             </div>
-            <div class="hn-sd">
+            <div class="ons-sd">
               <h4>
                 <a [routerLink]="['/articles', article.id]">{{ article.doc.get('title') }}</a>
               </h4>
-              <div class="hn-sm">
+              <div class="ons-sm">
                 published {{ article.doc.get('publishedAt') | date: 'fullDate' }}
               </div>
             </div>

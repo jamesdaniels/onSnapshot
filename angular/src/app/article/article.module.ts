@@ -15,14 +15,14 @@ import * as firebase from 'firebase/app';
 @Component({
   selector: 'article-view',
   template: `
-    <div class="hn-lc">
-      <nav class="hn-nb">
-        <div class="hn-hi">
+    <div class="ons-lc">
+      <nav class="ons-nb">
+        <div class="ons-hi">
           <a routerLink="/">
             <img height="64" width="64" alt="onSnapshot Logo" src="assets/images/onSnapshot_logo.png"/>
           </a>
         </div>
-        <div class="hn-nl">
+        <div class="ons-nl">
           {{ date | date: 'fullDate' }}
         </div>
       </nav>
