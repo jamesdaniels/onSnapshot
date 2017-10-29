@@ -1,6 +1,12 @@
 /* Base */
-* { box-sizing: border-box; }
-p,h1,h2,h3,h4,h5 { padding: 0; margin: 0; }
+* {
+  box-sizing: border-box;
+}
+
+p, h1, h2, h3, h4, h5 {
+  padding: 0;
+  margin: 0;
+}
 
 a, a:visited, a:hover {
   color: #0288d1;
@@ -8,7 +14,7 @@ a, a:visited, a:hover {
 
 body {
   border-top: 16px solid #209bc7;
-  color: rgba(0,0,0,0.87);
+  color: rgba(0, 0, 0, 0.87);
   font-family: Roboto, Helvetica, Arial, sans-serif;
   font-size: calc(15px + 7 * ((100vw - 500px) / 900));
   margin: 0;
@@ -26,6 +32,7 @@ ul {
   margin: 0 auto;
   min-width: 320px;
   padding: 0 2rem;
+  box-sizing: border-box;
 }
 
 /* Header module */
@@ -44,7 +51,7 @@ ul {
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  color: rgba(0,0,0,.86);
+  color: rgba(0, 0, 0, .86);
 }
 
 .ons-nl li {
@@ -61,18 +68,23 @@ ul {
   text-decoration: underline;
 }
 
-@media(max-width: 380px) {
+@media (max-width: 380px) {
   .ons-nl li a {
     font-size: 1rem;
   }
 }
 
-@media(min-width: 1000px) {
+@media (max-width: 480px) {
+  .article-byline span {
+    display: block;
+  }
+}
+
+@media (min-width: 1000px) {
   .ons-lc {
     padding: 0 6rem;
   }
 }
-
 
 /** item.css **/
 .ons-i h2 {
@@ -87,14 +99,17 @@ ul {
   padding: 1rem 0 0;
   font-size: 1rem;
 }
+
 .ons-cl .ons-cl {
   margin-left: .5rem
 }
+
 .ons-c p,
 .ons-ch {
   margin-bottom: .8rem;
   word-break: break-word;
 }
+
 .ons-ct {
   padding-left: .5rem
 }
@@ -103,11 +118,13 @@ ul {
   content: '[-] ';
   cursor: pointer;
 }
+
 .ons-c .hidden.ons-ch::before {
   content: '[+] ';
 }
+
 .ons-c .hidden.ons-ch ~ .ons-cb {
-  display:none;
+  display: none;
 }
 
 /** stories.css **/
@@ -116,8 +133,9 @@ ul {
   display: flex;
   padding: 1rem 0;
 }
+
 .ons-sl > article:hover {
-  background-color: rgba(0,0,0,.04);
+  background-color: rgba(0, 0, 0, .04);
 }
 
 .ons-sr {
@@ -151,6 +169,15 @@ ul {
   font-size: 0.7rem;
 }
 
+.ons-sm .inline-icon, .article-byline .inline-icon {
+  width: 0.7rem;
+  height: 0.7rem;
+  color: rgba(0, 0, 0, .54);
+}
+.article-byline .inline-icon {
+  margin-right: 4px;
+}
+
 .ons-p {
   display: flex;
   align-items: center;
@@ -172,6 +199,9 @@ ul {
 .author-details {
   display: flex;
   flex-direction: row;
+  padding: 24px 2rem;
+  background-color: rgba(0,0,0,.08);
+  margin: 0 -2rem 6px;
 }
 
 .author-avatar {
@@ -198,12 +228,12 @@ ul {
 }
 
 .author-text h2 {
-  color: rgba(0,0,0,.86);
+  color: rgba(0, 0, 0, .86);
   font-weight: 400;
 }
 
 .author-text p {
-  color: rgba(0,0,0,.54);
+  color: rgba(0, 0, 0, .54);
 }
 
 .articles-header {
@@ -213,13 +243,13 @@ ul {
 }
 
 .article-title {
-  color: rgba(0,0,0,.86);
+  color: rgba(0, 0, 0, .86);
   font-weight: 400;
 }
 
 .article-byline {
   font-size: 18px;
-  color: rgba(0,0,0,.54);
+  color: rgba(0, 0, 0, .54);
 }
 
 .article-text {

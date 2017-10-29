@@ -11,7 +11,6 @@ import {AngularFireDatabase} from 'angularfire2/database';
 import {MarkdownToHtmlModule} from 'markdown-to-html-pipe';
 
 import * as firebase from 'firebase/app';
-import {NavComponent} from "../nav/nav.component";
 
 @Component({
   selector: 'article-view',
@@ -38,13 +37,16 @@ import {NavComponent} from "../nav/nav.component";
         <article *ngIf="article$ | async; let article; else loading">
           <h2 class="article-title">{{ article.title }}</h2>
           <p class="article-byline">
-            By
             <span *ngIf="article.author | async; let author; else loading">
+              <img class="inline-icon" src="/assets/icons/if_pencil.svg" />
               <a [routerLink]="['/authors', author.id]">{{ author.get('name') }}</a>
             </span>
-            | {{ article.publishedAt | date: 'fullDate' }} |
-            Being read by
+            <span>
+              <img class="inline-icon" src="/assets/icons/if_calendar.svg" />
+              {{ article.publishedAt | date: 'fullDate' }}
+            </span>
             <span *ngIf="viewCount$ | async; let viewCount; else loadingViwers">
+              <img class="inline-icon" src="/assets/icons/if_glasses.svg" />
               {{ viewCount }} {{ viewCount !== 1 ? 'viewers' : 'viewer' }}
             </span>
           </p>

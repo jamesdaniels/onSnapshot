@@ -9,7 +9,6 @@ import {AngularFireAuth} from 'angularfire2/auth'
 import {AngularFireDatabase} from 'angularfire2/database';
 
 import * as firebase from 'firebase/app';
-import {NavComponent} from "../nav/nav.component";
 
 @Component({
   selector: 'author-view',
@@ -33,7 +32,6 @@ import {NavComponent} from "../nav/nav.component";
       </nav>
       
       <main>
-        <hr class="header-divider" />
         <div class="author-details" *ngIf="author$ | async; let author; else loading">
           <div class="author-avatar" *ngIf="author.avatarUrl">
             <img [src]="author.avatarUrl" />
@@ -43,8 +41,6 @@ import {NavComponent} from "../nav/nav.component";
             <p>{{ author.bio }}</p>
           </div>
         </div>
-        <hr class="author-divider" />
-        <h3 class="articles-header">Published Articles</h3>
         <section class="ons-sl" *ngIf="articles$ | async; let articles; else loading">
           <article *ngFor="let article of articles; let idx = index">
             <div class="ons-sr">
@@ -101,8 +97,7 @@ export class AuthorComponent implements OnInit {
     CommonModule,
     RouterModule.forChild([
       {path: '', component: AuthorComponent, pathMatch: 'full'}
-    ]),
-    NavComponent
+    ])
   ]
 })
 export class AuthorModule {

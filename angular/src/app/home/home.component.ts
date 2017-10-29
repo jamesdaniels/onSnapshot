@@ -33,10 +33,12 @@ import {Observable} from 'rxjs/Observable';
               <a [routerLink]="['articles', article.id]">{{ article.doc.get('title') }}</a>
             </h4>
             <div class="ons-sm">
-              by <span *ngIf="article.author | async; let author; else loading">
+              <span *ngIf="article.author | async; let author; else loading">
                 <a [routerLink]="['authors', author.id]">{{ author.get('name') }}</a>
               </span>
-              {{ article.doc.get('publishedAt') | date: 'short' }}
+              <span class="article-date">
+                | {{ article.doc.get('publishedAt') | date: 'short' }}
+              </span>
             </div>
           </div>
         </article>
@@ -51,13 +53,14 @@ export class HomeComponent implements OnInit {
   public articles$: Observable<any[]>;
 
   constructor(db: AngularFirestore) {
-    this.articles$ = db.collection('articles', ref => ref.orderBy('publishedAt', 'desc')).snapshotChanges().map(articles =>
-      articles.map(article => {
-        const id = article.payload.doc.id;
-        const author = db.doc(article.payload.doc.get('author').path).snapshotChanges().map(author => author.payload);
-        return {id, author, doc: article.payload.doc};
-      })
-    )
+    this.articles$ = db.collection('articles', ref => ref.orderBy('publishedAt', 'desc'))
+      .snapshotChanges().map(articles =>
+        articles.map(article => {
+          const id = article.payload.doc.id;
+          const author = db.doc(article.payload.doc.get('author').path).snapshotChanges().map(author => author.payload);
+          return {id, author, doc: article.payload.doc};
+        })
+      );
   }
 
   ngOnInit() {
