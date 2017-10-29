@@ -5,10 +5,6 @@ import {ActivatedRoute} from '@angular/router';
 import {Observable, Subscription} from 'rxjs/Rx';
 
 import {AngularFirestore} from 'angularfire2/firestore';
-import {AngularFireAuth} from 'angularfire2/auth'
-import {AngularFireDatabase} from 'angularfire2/database';
-
-import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'author-view',
@@ -20,13 +16,13 @@ import * as firebase from 'firebase/app';
             <img height="64" width="64" alt="onSnapshot Logo" src="assets/images/onSnapshot_logo.png"/>
           </a>
         </div>
-        
+
         <ul class="ons-nl">
           <li>
-            <a href="/?hot">HOT</a>
+            <a href="/?sort=hot">HOT</a>
           </li>
           <li>
-            <a href="/?fresh">FRESH</a>
+            <a href="/?sort=fresh">FRESH</a>
           </li>
         </ul>
       </nav>
@@ -56,7 +52,7 @@ import * as firebase from 'firebase/app';
             </div>
           </article>
         </section>
-        <ng-template #loading>&hellip;</ng-template>
+        <ng-template #loading>Loading...</ng-template>
       </main>
     </div>
   `

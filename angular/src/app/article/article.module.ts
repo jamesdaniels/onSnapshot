@@ -25,10 +25,10 @@ import * as firebase from 'firebase/app';
 
         <ul class="ons-nl">
           <li>
-            <a href="/?hot">HOT</a>
+            <a href="/?sort=hot">HOT</a>
           </li>
           <li>
-            <a href="/?fresh">FRESH</a>
+            <a href="/?sort=fresh">FRESH</a>
           </li>
         </ul>
       </nav>
@@ -45,15 +45,15 @@ import * as firebase from 'firebase/app';
               <img class="inline-icon" src="/assets/icons/if_calendar.svg" />
               {{ article.publishedAt | date: 'fullDate' }}
             </span>
-            <span *ngIf="viewCount$ | async; let viewCount; else loadingViwers">
+            <span *ngIf="viewCount$ | async; let viewCount; else loadingViewers">
               <img class="inline-icon" src="/assets/icons/if_glasses.svg" />
               {{ viewCount }} {{ viewCount !== 1 ? 'viewers' : 'viewer' }}
             </span>
           </p>
           <div class="article-text" [innerHTML]="article.body | MarkdownToHtml"></div>
         </article>
-        <ng-template #loadingViwers>1 viewer</ng-template>
-        <ng-template #loading>&hellip;</ng-template>
+        <ng-template #loadingViewers>1 viewer</ng-template>
+        <ng-template #loading>Loading...</ng-template>
       </section>
     </div>
   `

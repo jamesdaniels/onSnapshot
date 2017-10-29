@@ -15,10 +15,10 @@ import {Observable} from 'rxjs/Observable';
 
         <ul class="ons-nl">
           <li>
-            <a href="/?hot">HOT</a>
+            <a href="/?sort=hot">HOT</a>
           </li>
           <li>
-            <a href="/?fresh">FRESH</a>
+            <a href="/?sort=fresh">FRESH</a>
           </li>
         </ul>
       </nav>
@@ -43,7 +43,7 @@ import {Observable} from 'rxjs/Observable';
           </div>
         </article>
       </section>
-      <ng-template #loading>&hellip;</ng-template>
+      <ng-template #loading>Loading...</ng-template>
     </div>
   `
 })

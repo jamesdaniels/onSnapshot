@@ -9,7 +9,7 @@ p, h1, h2, h3, h4, h5 {
 }
 
 a, a:visited, a:hover {
-  color: #0288d1;
+  color: #209bc7;
 }
 
 body {
@@ -225,6 +225,10 @@ ul {
 .author-text {
   font-family: Roboto, Helvetica, Arial, sans-serif;
   padding-left: 24px;
+  align-items: flex-start;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .author-text h2 {
@@ -245,6 +249,7 @@ ul {
 .article-title {
   color: rgba(0, 0, 0, .86);
   font-weight: 400;
+  font-size: 2em;
 }
 
 .article-byline {
