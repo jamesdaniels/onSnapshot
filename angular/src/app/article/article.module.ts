@@ -33,14 +33,15 @@ import * as firebase from 'firebase/app';
         </ul>
       </nav>
 
-      <section>
+      <section class="ons-se">
         <article *ngIf="article$ | async; let article; else loading">
           <h2 class="article-title">{{ article.title }}</h2>
           <p class="article-byline">
-            <span *ngIf="article.author | async; let author; else loading">
+            <span *ngIf="article.author | async; let author; else loadingAuthor">
               <img class="inline-icon" src="/assets/icons/if_pencil.svg" />
               <a [routerLink]="['/authors', author.id]">{{ author.get('name') }}</a>
             </span>
+            <ng-template #loadingAuthor>Loading author...</ng-template>
             <span>
               <img class="inline-icon" src="/assets/icons/if_calendar.svg" />
               {{ article.publishedAt | date: 'fullDate' }}
@@ -49,11 +50,18 @@ import * as firebase from 'firebase/app';
               <img class="inline-icon" src="/assets/icons/if_glasses.svg" />
               {{ viewCount }} {{ viewCount !== 1 ? 'viewers' : 'viewer' }}
             </span>
+            <ng-template #loadingViewers>1 viewer</ng-template>
           </p>
           <div class="article-text" [innerHTML]="article.body | MarkdownToHtml"></div>
         </article>
-        <ng-template #loadingViewers>1 viewer</ng-template>
-        <ng-template #loading>Loading...</ng-template>
+        <ng-template class="loading-template" #loading>
+          <div class="cssload-thecube">
+            <div class="cssload-cube cssload-c1"></div>
+            <div class="cssload-cube cssload-c2"></div>
+            <div class="cssload-cube cssload-c4"></div>
+            <div class="cssload-cube cssload-c3"></div>
+          </div>
+        </ng-template>
       </section>
     </div>
   `

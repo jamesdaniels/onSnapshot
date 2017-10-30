@@ -28,9 +28,10 @@ import {AngularFirestore} from 'angularfire2/firestore';
       </nav>
       
       <main>
-        <div class="author-details" *ngIf="author$ | async; let author; else loading">
+        <div class="author-details" *ngIf="author$ | async; let author">
           <div class="author-avatar" *ngIf="author.avatarUrl">
-            <img [src]="author.avatarUrl" />
+            <!--<img [src]="author.avatarUrl" />-->
+            <div class="author-avatar-img" [style.background-image]="'url('+author.avatarUrl+')'"></div>
           </div>
           <div class="author-text">
             <h2>{{ author.name }}</h2>
@@ -52,7 +53,14 @@ import {AngularFirestore} from 'angularfire2/firestore';
             </div>
           </article>
         </section>
-        <ng-template #loading>Loading...</ng-template>
+        <ng-template class="loading-template" #loading>
+          <div class="cssload-thecube">
+            <div class="cssload-cube cssload-c1"></div>
+            <div class="cssload-cube cssload-c2"></div>
+            <div class="cssload-cube cssload-c4"></div>
+            <div class="cssload-cube cssload-c3"></div>
+          </div>
+        </ng-template>
       </main>
     </div>
   `

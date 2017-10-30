@@ -33,9 +33,10 @@ import {Observable} from 'rxjs/Observable';
               <a [routerLink]="['articles', article.id]">{{ article.doc.get('title') }}</a>
             </h4>
             <div class="ons-sm">
-              <span *ngIf="article.author | async; let author; else loading">
+              <span *ngIf="article.author | async; let author; else loadingAuthor">
                 <a [routerLink]="['authors', author.id]">{{ author.get('name') }}</a>
               </span>
+              <ng-template #loadingAuthor>Loading author...</ng-template>
               <span class="article-date">
                 | {{ article.doc.get('publishedAt') | date: 'short' }}
               </span>
@@ -43,7 +44,14 @@ import {Observable} from 'rxjs/Observable';
           </div>
         </article>
       </section>
-      <ng-template #loading>Loading...</ng-template>
+      <ng-template class="loading-template" #loading>
+        <div class="cssload-thecube">
+          <div class="cssload-cube cssload-c1"></div>
+          <div class="cssload-cube cssload-c2"></div>
+          <div class="cssload-cube cssload-c4"></div>
+          <div class="cssload-cube cssload-c3"></div>
+        </div>
+      </ng-template>
     </div>
   `
 })

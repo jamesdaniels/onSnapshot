@@ -68,23 +68,6 @@ ul {
   text-decoration: underline;
 }
 
-@media (max-width: 380px) {
-  .ons-nl li a {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .article-byline span {
-    display: block;
-  }
-}
-
-@media (min-width: 1000px) {
-  .ons-lc {
-    padding: 0 6rem;
-  }
-}
 
 /** item.css **/
 .ons-i h2 {
@@ -184,6 +167,9 @@ ul {
   justify-content: space-between;
   padding: 0 1.1rem;
 }
+.ons-se {
+  padding: 0 12px;
+}
 
 /** custom **/
 .header-divider, .author-divider {
@@ -210,7 +196,9 @@ ul {
   justify-content: flex-start;
 }
 
-.author-avatar img {
+.author-avatar-img {
+  background-size: cover;
+  background-position: center center;
   border: 2px solid #FFF;
   border-radius: 50%;
   box-sizing: border-box;
@@ -257,6 +245,10 @@ ul {
   color: rgba(0, 0, 0, .54);
 }
 
+.article-byline span {
+  margin-right: 12px;
+}
+
 .article-text {
   font-size: 16px;
   margin-top: 24px;
@@ -265,4 +257,109 @@ ul {
 app-nav {
   display: block;
   flex: 1 0;
+}
+
+.loading-template {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.cssload-thecube {
+  width: 73px;
+  height: 73px;
+  margin: 0 auto;
+  margin-top: 49px;
+  position: relative;
+  transform: rotateZ(45deg);
+}
+.cssload-thecube .cssload-cube {
+  position: relative;
+  transform: rotateZ(45deg);
+}
+.cssload-thecube .cssload-cube {
+  float: left;
+  width: 50%;
+  height: 50%;
+  position: relative;
+  transform: scale(1.1);
+}
+.cssload-thecube .cssload-cube:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(43,160,199);
+  animation: cssload-fold-thecube 1.2s infinite linear both;
+  transform-origin: 100% 100%;
+}
+.cssload-thecube .cssload-c2 {
+  transform: scale(1.1) rotateZ(90deg);
+}
+.cssload-thecube .cssload-c3 {
+  transform: scale(1.1) rotateZ(180deg);
+}
+.cssload-thecube .cssload-c4 {
+  transform: scale(1.1) rotateZ(270deg);
+}
+.cssload-thecube .cssload-c2:before {
+  animation-delay: 0.145s;
+}
+.cssload-thecube .cssload-c3:before {
+  animation-delay: 0.3s;
+}
+.cssload-thecube .cssload-c4:before {
+  animation-delay: 0.445s;
+}
+
+@keyframes cssload-fold-thecube {
+  0%, 10% {
+    transform: perspective(136px) rotateX(-180deg);
+    opacity: 0;
+  }
+  25%,
+  75% {
+    transform: perspective(136px) rotateX(0deg);
+    opacity: 1;
+  }
+  90%,
+  100% {
+    transform: perspective(136px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+
+
+@media (max-width: 380px) {
+  .ons-nl li a {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ons-lc {
+    padding: 0 .7rem;
+    width: 100%;
+  }
+
+  .ons-nb {
+    padding: 12px;
+  }
+
+  .author-details {
+    margin: 0 -.7rem 6px;
+  }
+
+  .article-byline span {
+    display: block;
+  }
+}
+
+@media (min-width: 1000px) {
+  .ons-lc {
+    padding: 0 6rem;
+  }
 }
