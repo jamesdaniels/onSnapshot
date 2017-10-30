@@ -4,11 +4,11 @@ import {RouterModule} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
 import {Observable, Subscription} from 'rxjs/Rx';
 
-import {AngularFirestore} from 'angularfire2/firestore';
+import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import {AngularFireAuth} from 'angularfire2/auth'
 import {AngularFireDatabase} from 'angularfire2/database';
 
-import {MarkdownToHtmlModule} from 'markdown-to-html-pipe';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import * as firebase from 'firebase/app';
 
@@ -52,8 +52,25 @@ import * as firebase from 'firebase/app';
             </span>
             <ng-template #loadingViewers>1 viewer</ng-template>
           </p>
-          <div class="article-text" [innerHTML]="article.body | MarkdownToHtml"></div>
+          <div class="article-text" [innerHTML]="article.body"></div>
         </article>
+
+        <ul *ngIf="comments$ | async; let comments">
+          <li *ngFor="let comment of comments">
+            {{ comment.text }}
+            {{ comment.profile | async | json }}
+          </li>
+        </ul>
+
+        <div *ngIf="isAnonymous$ | async">
+          <button (click)="signinWithGoogle()">Sign in with Google to comment</button>
+        </div>
+        <div *ngIf="!(isAnonymous$ | async)">
+          <p>Hello {{ (afAuth.authState | async)?.displayName }},</p>
+          <button (click)="addComment('test')">Add test comment</button>
+          <button (click)="signout()">Sign out</button>
+        </div>
+
         <ng-template class="loading-template" #loading>
           <div class="cssload-thecube">
             <div class="cssload-cube cssload-c1"></div>
@@ -72,8 +89,14 @@ export class ArticleComponent implements OnInit, OnDestroy {
   public article$: Observable<any>;
   public viewCount$: Observable<any>;
   public visitorRef: firebase.database.Reference | null;
+  public isAnonymous$: Observable<boolean>;
+  public commentCollection$: BehaviorSubject<AngularFirestoreCollection<any>>;
+  public comments$: Observable<any[]>;
+  public profile$: BehaviorSubject<firebase.firestore.DocumentReference | null>;
 
-  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, route: ActivatedRoute, afAuth: AngularFireAuth) {
+  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, route: ActivatedRoute, public afAuth: AngularFireAuth) {
+    this.profile$ = new BehaviorSubject(null);
+    
     this.article$ = route.params.switchMap(params =>
       afs.doc(`articles/${params['id']}`).valueChanges()
     ).map(article => {
@@ -82,10 +105,26 @@ export class ArticleComponent implements OnInit, OnDestroy {
       }
       return article;
     });
+
     this.viewCount$ = route.params.switchMap(params =>
       rtdb.object(`articleViewCount/${params['id']}`).valueChanges()
     );
+    
+    this.afAuth.authState.subscribe(user => this.profile$.next(user && afs.firestore.doc(`profiles/${user.uid}`)));
+    
+    Observable.combineLatest(
+      afAuth.authState,
+      this.profile$.switchMap(ref => ref ? Observable.fromPromise(ref.get()) : Observable.of(null))
+    )
+    .filter(([authState, profile]) => authState != null && profile && !profile.exists)
+    .subscribe(([authState, profile]) =>
+      profile.ref.set({
+        name: authState.displayName
+      })
+    );
+
     Observable.combineLatest(route.params, afAuth.authState).subscribe(([params, authState]) => {
+      console.log(params, authState);
       if (this.visitorRef) {
         this.visitorRef.remove()
       }
@@ -96,6 +135,40 @@ export class ArticleComponent implements OnInit, OnDestroy {
       } else {
         afAuth.auth.signInAnonymously();
       }
+    });
+    this.isAnonymous$ = afAuth.authState.map(user => user && user.isAnonymous);
+    
+    route.params.subscribe(params =>  {
+      const collection = afs.collection(`articles/${params['id']}/comments`);
+      if (this.commentCollection$) {
+        this.commentCollection$.next(collection);
+      } else {
+        this.commentCollection$ = new BehaviorSubject(collection);
+      }
+    });
+
+    this.comments$ = this.commentCollection$.switchMap(collection => 
+      collection.valueChanges().map(comments =>
+        comments.map(comment => {
+          comment['profile'] = afs.doc(comment['profile'].path).valueChanges();
+          return comment;
+        })
+      )
+    );
+  }
+
+  signinWithGoogle() {
+    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  }
+
+  signout() {
+    this.afAuth.auth.signOut();
+  }
+
+  addComment(text) {
+    this.commentCollection$.getValue().add({
+      text: text,
+      profile: this.profile$.getValue()
     });
   }
 
@@ -115,7 +188,6 @@ export class ArticleComponent implements OnInit, OnDestroy {
 @NgModule({
   declarations: [ArticleComponent],
   imports: [
-    MarkdownToHtmlModule,
     CommonModule,
     RouterModule.forChild([
       {path: '', component: ArticleComponent, pathMatch: 'full'}

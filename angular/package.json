@@ -39,9 +39,7 @@
     "angularfire2": "^5.0.0-rc.3",
     "core-js": "^2.4.1",
     "firebase": "^4.6.0",
-    "markdown-to-html-pipe": "^1.2.3",
     "rxjs": "^5.4.2",
-    "xmlhttprequest": "^1.8.0",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
