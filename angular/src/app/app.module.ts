@@ -10,7 +10,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { environment } from '../environments/environment';
-import { NavComponent } from "./nav/nav.component";
+import { NavComponent } from './nav/nav.component';
 
 @NgModule({
   declarations: [
