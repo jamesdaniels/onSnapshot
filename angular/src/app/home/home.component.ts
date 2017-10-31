@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {AngularFirestore} from 'angularfire2/firestore';
+import {AngularFireDatabase, AngularFireAction} from 'angularfire2/database';
 import {Observable} from 'rxjs/Observable';
+
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'home',
@@ -44,6 +47,9 @@ import {Observable} from 'rxjs/Observable';
               <span class="article-date">
                 | {{ article.doc.get('publishedAt') | date: 'short' }}
               </span>
+              <span>
+                | {{ (article.viewCount | async) || 0 }} {{ (article.viewCount | async) !== 1 ? 'viewers' : 'viewer' }}
+              </span>
             </div>
           </div>
         </article>
@@ -63,16 +69,23 @@ export class HomeComponent implements OnInit {
   public date: Date;
   public catchphrase: string;
   public articles$: Observable<any[]>;
+  public articleViewCounts$: Observable<AngularFireAction<firebase.database.DataSnapshot>[]>;
 
-  constructor(db: AngularFirestore) {
-    this.articles$ = db.collection('articles', ref => ref.orderBy('publishedAt', 'desc'))
+  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase) {
+    this.articles$ = afs.collection('articles', ref => ref.orderBy('publishedAt', 'desc'))
       .snapshotChanges().map(articles =>
         articles.map(article => {
           const id = article.payload.doc.id;
-          const author = db.doc(article.payload.doc.get('author').path).snapshotChanges().map(author => author.payload);
-          return {id, author, doc: article.payload.doc};
+          const author = afs.doc(article.payload.doc.get('author').path).snapshotChanges().map(author => author.payload);
+          const viewCount = this.articleViewCounts$.switchMap(articleViewCounts => 
+            articleViewCounts.filter(value => 
+              value.key == id
+            ).map(value => value.payload.val() as number)
+          )
+          return {id, author, viewCount, doc: article.payload.doc};
         })
       );
+    this.articleViewCounts$ = rtdb.list('articleViewCount').snapshotChanges();
   }
 
   ngOnInit() {
