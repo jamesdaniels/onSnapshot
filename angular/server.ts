@@ -7,7 +7,7 @@ import * as express from 'express';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-(global as any).XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+(global as any).WebSocket = require("ws");
 
 // Faster server renders w/ Prod mode (dev mode never needed)
 enableProdMode();
