@@ -32,8 +32,15 @@ module.exports = {
         cacheId: 'onSnapshot',
         dontCacheBustUrlsMatching: /\.\w{8}\./,
         filename: 'browser/sw.js',
+        staticFileGlobs: [
+          'dist/browser/index.html',
+          'dist/browser/**.chunk.js',
+          'dist/browser/**.bundle.*',
+          'dist/browser/assets/**/*'
+        ],
+        stripPrefix: 'dist/browser/',
         minify: true,
-        navigateFallback: 'https://onSnapshot.com/',
+        navigateFallback: 'https://onsnapshot.com/index.html',
         staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
       }
     ),

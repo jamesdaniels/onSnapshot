@@ -27,6 +27,37 @@
   <meta name="theme-color" content="#209bc7">
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+    <router-outlet></router-outlet><home>
+    <div class="ons-lc">
+      <nav class="ons-nb">
+        <div class="ons-hi">
+          <a routerLink="/" href="/">
+            <img alt="onSnapshot Logo" height="64" src="assets/images/onSnapshot_logo.png" width="64">
+          </a>
+        </div>
+
+        <ul class="ons-nl">
+          <li>
+            <a href="/?sort=hot">HOT</a>
+          </li>
+          <li>
+            <a href="/?sort=fresh">FRESH</a>
+          </li>
+        </ul>
+      </nav>
+      
+      <!---->
+        <div class="cssload-thecube">
+          <div class="cssload-cube cssload-c1"></div>
+          <div class="cssload-cube cssload-c2"></div>
+          <div class="cssload-cube cssload-c4"></div>
+          <div class="cssload-cube cssload-c3"></div>
+        </div>
+      
+      <!---->
+    </div>
+  </home>
+  </app-root>
 </body>
 </html>
