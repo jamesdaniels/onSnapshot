@@ -28,36 +28,40 @@
 </head>
 <body>
   <app-root>
-    <router-outlet></router-outlet><home>
-    <div class="ons-lc">
-      <nav class="ons-nb">
-        <div class="ons-hi">
-          <a routerLink="/" href="/">
-            <img alt="onSnapshot Logo" height="64" src="assets/images/onSnapshot_logo.png" width="64">
-          </a>
-        </div>
+    <router-outlet></router-outlet>
+    <style>
+      body,h1,h2,h3,h4,h5,p,ul{margin:0;padding:0}.author-text,body{font-family:Roboto,Helvetica,Arial,sans-serif}.author-avatar-img,.comment-avatar-img{background-size:cover;background-position:center center;box-sizing:border-box}*,.author-avatar-img,.comment-avatar-img,.ons-lc{box-sizing:border-box}h1,h2,h3,h4,h5,p{line-height:1.2em}a,a:hover,a:visited{color:#209bc7}body{border-top:16px solid #209bc7;color:rgba(0,0,0,.87);font-size:calc(15px + 7 * ((100vw - 500px)/ 900))}ul{list-style-type:none}.ons-lc{margin:0 auto;min-width:320px;padding:0 2rem}.ons-logo{height:64px;width:64px}.ons-nb{display:flex;justify-content:space-between;padding:20px 0}.ons-hi{padding-right:30px}.ons-nl{display:flex;justify-content:flex-start;align-items:center;width:100%;color:rgba(0,0,0,.86)}.ons-nl li a,.ons-sr h2{color:rgba(0,0,0,.63)}.ons-nl li{padding:12px 24px}.ons-nl li a{font-size:1.2rem;text-decoration:none}.ons-nl li a:hover{text-decoration:underline}.ons-i h2{padding:1rem 0}.ons-fl{font-weight:lighter}.ons-c{padding:1rem 0 0;font-size:1rem}.ons-cl .ons-cl{margin-left:.5rem}.ons-c p,.ons-ch{margin-bottom:.8rem;word-break:break-word}.ons-ct{padding-left:.5rem}.ons-c .ons-ch::before{content:'[-] ';cursor:pointer}.ons-c .hidden.ons-ch::before{content:'[+] '}.ons-c .hidden.ons-ch~.ons-cb{display:none}.ons-sl>article{border-bottom:1px solid rgba(239,239,239,.8);display:flex;padding:1rem 0}.ons-sl>article:hover{background-color:rgba(0,0,0,.04)}.ons-sr{padding:15px;width:60px}.ons-sd{align-items:flex-start;display:flex;flex-direction:column;justify-content:center;width:100%}.ons-sd h4{font-weight:400;padding:4px 0}.ons-sd h4 a{color:rgba(0,0,0,.87);text-decoration:none}.ons-sm{font-size:.7rem}.article-byline .inline-icon,.ons-sm .inline-icon{width:.7rem;height:.7rem;color:rgba(0,0,0,.54)}.article-byline .inline-icon{margin-right:4px}.ons-p{display:flex;align-items:center;justify-content:space-between;padding:0 1.1rem}.ons-se{padding:0 12px}.author-details{display:flex;flex-direction:row;padding:24px 2rem;background-color:rgba(0,0,0,.08);margin:0 -2rem 6px}.author-avatar{align-items:center;display:flex;justify-content:flex-start}.author-avatar-img{border:2px solid #FFF;border-radius:50%;height:64px;width:64px}.author-divider{margin:24px 0}.author-text{padding-left:24px;align-items:flex-start;display:flex;justify-content:center;flex-direction:column}.author-text h2{color:rgba(0,0,0,.86);font-weight:400}.author-text p{color:rgba(0,0,0,.54)}article p{margin-bottom:1.2em}.articles-header{font-size:22px;font-weight:400;text-align:center}.article-title{color:rgba(0,0,0,.86);font-weight:400;font-size:2em}.article-byline{font-size:18px;color:rgba(0,0,0,.54)}.article-byline span{margin-right:12px}.article-text{font-size:16px;margin-top:24px}.comments-heading{padding-top:12px}.comment-details{display:flex;flex-direction:row;padding:12px;background-color:rgba(0,0,0,.02);margin:0 0 6px;border:rgba(0,0,0,.08);border-radius:8px}.comment-avatar{align-items:center;display:flex;justify-content:flex-start;margin-right:12px}.comment-avatar-img{border:2px solid #FFF;border-radius:50%;height:36px;width:36px}.comment-text{font-size:.8em}.comment-text h2{font-size:1.2em;font-weight:500}.comment-text small{color:#d3d3d3}.comments-auth{margin-bottom:24px}.comments-auth p{font-size:.6em}.no-js{position:fixed;left:0;right:0;bottom:0;color:#000;background-color:rgba(0,0,0,.12);text-align:center}app-nav{display:block;flex:1 0}.loading-template{display:flex;flex:1 1;flex-direction:column;justify-content:center;align-items:center}.cssload-thecube{width:73px;height:73px;margin:49px auto 0;position:relative;transform:rotateZ(45deg)}.cssload-thecube .cssload-cube{transform:rotateZ(45deg);float:left;width:50%;height:50%;position:relative;transform:scale(1.1)}.cssload-thecube .cssload-cube:before{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background-color:#209bc7;animation:cssload-fold-thecube 1.2s infinite linear both;transform-origin:100% 100%}.cssload-thecube .cssload-c2{transform:scale(1.1) rotateZ(90deg)}.cssload-thecube .cssload-c3{transform:scale(1.1) rotateZ(180deg)}.cssload-thecube .cssload-c4{transform:scale(1.1) rotateZ(270deg)}.cssload-thecube .cssload-c2:before{animation-delay:145ms}.cssload-thecube .cssload-c3:before{animation-delay:.3s}.cssload-thecube .cssload-c4:before{animation-delay:445ms}@keyframes cssload-fold-thecube{0%,10%{transform:perspective(136px) rotateX(-180deg);opacity:0}25%,75%{transform:perspective(136px) rotateX(0);opacity:1}100%,90%{transform:perspective(136px) rotateY(180deg);opacity:0}}@media (max-width:380px){.ons-nl li a{font-size:1rem}}@media (max-width:480px){.ons-lc{padding:0 .7rem;width:100%}.ons-nb{padding:12px}.author-details{margin:0 -.7rem 6px}.article-byline span{display:block}}@media (min-width:1000px){.ons-lc{padding:0 6rem}}    </style>
+    <home>
+      <div class="ons-lc">
+        <nav class="ons-nb">
+          <div class="ons-hi">
+            <a routerLink="/" href="/">
+              <img alt="onSnapshot Logo" height="64" width="64" src="assets/images/onSnapshot_logo_sm.png" />
+            </a>
+          </div>
 
-        <ul class="ons-nl">
-          <li>
-            <a href="/?sort=hot">HOT</a>
-          </li>
-          <li>
-            <a href="/?sort=fresh">FRESH</a>
-          </li>
-        </ul>
-      </nav>
-      
-      <!---->
+          <ul class="ons-nl">
+            <li>
+              <a href="/?sort=hot">HOT</a>
+            </li>
+            <li>
+              <a href="/?sort=fresh">FRESH</a>
+            </li>
+          </ul>
+        </nav>
+
         <div class="cssload-thecube">
           <div class="cssload-cube cssload-c1"></div>
           <div class="cssload-cube cssload-c2"></div>
           <div class="cssload-cube cssload-c4"></div>
           <div class="cssload-cube cssload-c3"></div>
         </div>
-      
-      <!---->
-    </div>
-  </home>
+      </div>
+    </home>
   </app-root>
+
+  <noscript class="no-js">
+    JavaScript is required for the best experience. Please consider turning on JavaScript.
+  </noscript>
 </body>
 </html>

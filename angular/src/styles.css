@@ -301,6 +301,16 @@ article p {
   font-size: .6em;
 }
 
+.no-js {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: #000;
+  background-color: rgba(0,0,0,.12);
+  text-align: center;
+}
+
 app-nav {
   display: block;
   flex: 1 0;
