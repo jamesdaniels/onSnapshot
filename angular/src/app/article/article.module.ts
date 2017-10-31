@@ -88,14 +88,17 @@ export class ArticleComponent implements OnInit, OnDestroy {
   public catchphrase: string;
   public article$: Observable<any>;
   public viewCount$: Observable<any>;
-  public visitorRef: firebase.database.Reference | null;
+  public visitorRef$: BehaviorSubject<firebase.database.Reference>;
   public isAnonymous$: Observable<boolean>;
   public commentCollection$: BehaviorSubject<AngularFirestoreCollection<any>>;
   public comments$: Observable<any[]>;
-  public profile$: BehaviorSubject<firebase.firestore.DocumentReference | null>;
+  public profileRef$: BehaviorSubject<firebase.firestore.DocumentReference | null>;
+  public profile$: Observable<firebase.firestore.DocumentSnapshot | null>;
 
   constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, route: ActivatedRoute, public afAuth: AngularFireAuth) {
-    this.profile$ = new BehaviorSubject(null);
+    this.profileRef$ = new BehaviorSubject(undefined);
+    this.visitorRef$ = new BehaviorSubject(undefined);
+    this.commentCollection$ = new BehaviorSubject(undefined);
     
     this.article$ = route.params.switchMap(params =>
       afs.doc(`articles/${params['id']}`).valueChanges()
@@ -110,42 +113,42 @@ export class ArticleComponent implements OnInit, OnDestroy {
       rtdb.object(`articleViewCount/${params['id']}`).valueChanges()
     );
     
-    this.afAuth.authState.subscribe(user => this.profile$.next(user && afs.firestore.doc(`profiles/${user.uid}`)));
-    
-    Observable.combineLatest(
-      afAuth.authState,
-      this.profile$.switchMap(ref => ref ? Observable.fromPromise(ref.get()) : Observable.of(null))
-    )
-    .filter(([authState, profile]) => authState != null && profile && !profile.exists)
-    .subscribe(([authState, profile]) =>
-      profile.ref.set({
-        name: authState.displayName
+    this.afAuth.authState.map(user => 
+      user && afs.firestore.doc(`profiles/${user.uid}`)
+    ).subscribe(this.profileRef$);
+
+    this.profile$ = this.profileRef$.switchMap(ref =>
+      ref ? Observable.fromPromise(ref.get()) : Observable.of(null)
+    );
+
+    // when profile$ changes, if the profile doesn't exist create it (so long as we aren't anon)
+    this.profile$.withLatestFrom(this.profileRef$, afAuth.authState)
+    .filter(([profile, ref, user]) => !!user && !user.isAnonymous && !!ref && !profile.exists)
+    .subscribe(([_, ref, user]) => 
+      ref.set({
+        name: user.displayName
       })
     );
 
-    Observable.combineLatest(route.params, afAuth.authState).subscribe(([params, authState]) => {
-      console.log(params, authState);
-      if (this.visitorRef) {
-        this.visitorRef.remove()
-      }
-      if (authState) {
-        this.visitorRef = rtdb.database.ref(`articleVisitors/${params['id']}/${authState.uid}`);
-        this.visitorRef.onDisconnect().remove();
-        this.visitorRef.set(true);
-      } else {
-        afAuth.auth.signInAnonymously();
-      }
+    afAuth.authState.filter(u => !u).subscribe(() => afAuth.auth.signInAnonymously());
+    
+    this.visitorRef$.distinctUntilChanged().pairwise().subscribe(([prevRef, _]) => {
+      prevRef && prevRef.remove();
     });
+
+    Observable.combineLatest(route.params, afAuth.authState.filter(u => !!u)).map(([params, authState]) =>
+      rtdb.database.ref(`articleVisitors/${params['id']}/${authState.uid}`)
+    ).subscribe(this.visitorRef$);
+
+    this.visitorRef$.filter(r => !!r).subscribe(r => {
+      r.set(true).then(() => r.onDisconnect().remove());
+    });
+
     this.isAnonymous$ = afAuth.authState.map(user => user && user.isAnonymous);
     
-    route.params.subscribe(params =>  {
-      const collection = afs.collection(`articles/${params['id']}/comments`);
-      if (this.commentCollection$) {
-        this.commentCollection$.next(collection);
-      } else {
-        this.commentCollection$ = new BehaviorSubject(collection);
-      }
-    });
+    route.params.map(params =>
+      afs.collection(`articles/${params['id']}/comments`)
+    ).subscribe(this.commentCollection$);
 
     this.comments$ = this.commentCollection$.switchMap(collection => 
       collection.valueChanges().map(comments =>
@@ -158,7 +161,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   }
 
   signinWithGoogle() {
-    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
   }
 
   signout() {
@@ -168,7 +171,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   addComment(text) {
     this.commentCollection$.getValue().add({
       text: text,
-      profile: this.profile$.getValue()
+      profile: this.profileRef$.getValue()
     });
   }
 
@@ -178,8 +181,8 @@ export class ArticleComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.visitorRef) {
-      this.visitorRef.remove();
+    if (this.visitorRef$.getValue()) {
+      this.visitorRef$.getValue().remove();
     }
   }
 }
