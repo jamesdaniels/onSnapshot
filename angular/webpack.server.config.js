@@ -2,6 +2,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -26,6 +27,16 @@ module.exports = {
     ]
   },
   plugins: [
+    new SWPrecacheWebpackPlugin(
+      {
+        cacheId: 'onSnapshot',
+        dontCacheBustUrlsMatching: /\.\w{8}\./,
+        filename: 'browser/sw.js',
+        minify: true,
+        navigateFallback: 'https://onSnapshot.com/',
+        staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
+      }
+    ),
     new webpack.ContextReplacementPlugin(
       // fixes WARNING Critical dependency: the request of a dependency is an expression
       /(.+)?angular(\\|\/)core(.+)?/,

@@ -2,6 +2,8 @@ import {NgModule} from '@angular/core';
 import {ServerModule} from '@angular/platform-server';
 import {ModuleMapLoaderModule} from '@nguniversal/module-map-ngfactory-loader';
 
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+
 import {AppModule} from './app.module';
 import {AppComponent} from './app.component';
 
@@ -12,6 +14,7 @@ import {AppComponent} from './app.component';
     AppModule,
     ServerModule,
     ModuleMapLoaderModule,
+    AngularFirestoreModule
   ],
   // Since the bootstrapped component is not inherited from your
   // imported AppModule, it needs to be repeated here.
