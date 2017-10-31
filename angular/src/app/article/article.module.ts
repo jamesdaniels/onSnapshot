@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
 import {Observable, Subscription} from 'rxjs/Rx';
+import { FormsModule }   from '@angular/forms';
 
 import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import {AngularFireAuth} from 'angularfire2/auth'
@@ -68,20 +69,21 @@ import * as firebase from 'firebase/app';
               </div>
               <div class="comment-text">
                 <h2>"{{ comment.text }}"</h2>
-                <p>{{ profile.name }} <span *ngIf="comment.timestamp">@ {{ comment.timestamp }}</span></p>
+                <p>{{ profile.name }} <small *ngIf="comment.commentedAt">@ {{ comment.commentedAt }}</small></p>
               </div>
             </div>
           </div>
         </div>
         
         <div class="comments-auth" *ngIf="article$ | async">
+          <h4>Add your 2¢</h4>
           <div *ngIf="isAnonymous$ | async">
             <button (click)="signinWithGoogle()">Sign in with Google to comment</button>
           </div>
           <div *ngIf="!(isAnonymous$ | async)">
-            <p>Hello, {{ (afAuth.authState | async)?.displayName }}</p>
-            <button (click)="addComment('This is a test comment!')">Add test comment</button>
-            <button (click)="signout()">Sign out</button>
+            <p><textarea [(ngModel)]="newCommentText" name="newCommentText" rows="4" cols="50"></textarea></p>
+            <p>Commenting as {{ (afAuth.authState | async)?.displayName }} <button (click)="addComment()" [disabled]="newCommentText == ''">Add comment</button></p>
+            <p><button (click)="signout()">Sign out</button></p>
           </div>
         </div>
         
@@ -108,6 +110,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   public comments$: Observable<any[]>;
   public profileRef$: BehaviorSubject<firebase.firestore.DocumentReference | null>;
   public profile$: Observable<firebase.firestore.DocumentSnapshot | null>;
+  public newCommentText: string = '';
 
   constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, route: ActivatedRoute, public afAuth: AngularFireAuth) {
     this.profileRef$ = new BehaviorSubject(undefined);
@@ -140,7 +143,8 @@ export class ArticleComponent implements OnInit, OnDestroy {
     .filter(([profile, ref, user]) => !!user && !user.isAnonymous && !!ref && !profile.exists)
     .subscribe(([_, ref, user]) =>
       ref.set({
-        name: user.displayName
+        name: user.displayName,
+        avatarUrl: user.photoURL
       })
     );
 
@@ -161,7 +165,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
     this.isAnonymous$ = afAuth.authState.map(user => user && user.isAnonymous);
 
     route.params.map(params =>
-      afs.collection(`articles/${params['id']}/comments`)
+      afs.collection(`articles/${params['id']}/comments`, ref => ref.orderBy('commentedAt', 'asc'))
     ).subscribe(this.commentCollection$);
 
     this.comments$ = this.commentCollection$.switchMap(collection =>
@@ -182,11 +186,15 @@ export class ArticleComponent implements OnInit, OnDestroy {
     this.afAuth.auth.signOut();
   }
 
-  addComment(text) {
+  addComment() {
     this.commentCollection$.getValue().add({
-      text: text,
-      profile: this.profileRef$.getValue()
+      text: this.newCommentText,
+      profile: this.profileRef$.getValue(),
+      commentedAt: new Date()
+    }).then(() => {
+      this.newCommentText = "";
     });
+    return false;
   }
 
   ngOnInit() {
@@ -205,6 +213,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
 @NgModule({
   declarations: [ArticleComponent],
   imports: [
+    FormsModule,
     CommonModule,
     RouterModule.forChild([
       {path: '', component: ArticleComponent, pathMatch: 'full'}

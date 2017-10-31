@@ -11,7 +11,10 @@ module.exports = {
     firebase: './firebase.ts'
   },
   target: 'node',
-  resolve: { extensions: ['.tsx', '.ts', '.js'] },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+    mainFiles: ['index.node', 'index']
+  },
   // Make sure we include all node_modules etc
   externals: [/(node_modules|main\..*\.js)/,],
   output: {
