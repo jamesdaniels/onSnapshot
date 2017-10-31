@@ -50,6 +50,7 @@
     "cpy-cli": "^1.0.1",
     "http-server": "^0.10.0",
     "reflect-metadata": "^0.1.10",
+    "sw-precache-webpack-plugin": "^0.11.4",
     "ts-loader": "^2.3.7",
     "typescript": "~2.3.3"
   }

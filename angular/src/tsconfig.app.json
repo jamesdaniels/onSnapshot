@@ -9,5 +9,8 @@
   "exclude": [
     "test.ts",
     "**/*.spec.ts"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "entryModule": "app/app.browser.module#AppBrowserModule"
+  }
 }
