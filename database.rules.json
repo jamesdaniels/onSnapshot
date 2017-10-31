@@ -1,6 +1,13 @@
 {
   "rules": {
     ".read": true,
-    ".write": true
+    ".write": false,
+    "articleVisitors": {
+      "$id": {
+        "$uid": {
+      		".write": "auth.uid === $uid"
+      	}
+      }
+    }
   }
 }

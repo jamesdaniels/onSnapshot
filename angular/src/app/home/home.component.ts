@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {AngularFireDatabase, AngularFireAction} from 'angularfire2/database';
 import {Observable} from 'rxjs/Observable';
+import { isPlatformBrowser } from '@angular/common';
 
 import * as firebase from 'firebase/app';
 
@@ -71,7 +72,7 @@ export class HomeComponent implements OnInit {
   public articles$: Observable<any[]>;
   public articleViewCounts$: Observable<AngularFireAction<firebase.database.DataSnapshot>[]>;
 
-  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase) {
+  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, @Inject(PLATFORM_ID) platformId) {
     this.articles$ = afs.collection('articles', ref => ref.orderBy('publishedAt', 'desc'))
       .snapshotChanges().map(articles =>
         articles.map(article => {
@@ -85,7 +86,11 @@ export class HomeComponent implements OnInit {
           return {id, author, viewCount, doc: article.payload.doc};
         })
       );
-    this.articleViewCounts$ = rtdb.list('articleViewCount').snapshotChanges();
+    if (isPlatformBrowser(platformId)) {
+      this.articleViewCounts$ = rtdb.list('articleViewCount').snapshotChanges();
+    } else {
+      this.articleViewCounts$ = Observable.of([]);
+    }
   }
 
   ngOnInit() {
