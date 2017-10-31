@@ -254,6 +254,47 @@ ul {
   margin-top: 24px;
 }
 
+.comments-heading {
+  padding-top: 12px;
+}
+.comment-details {
+  display: flex;
+  flex-direction: row;
+  padding: 24px 2rem;
+  background-color: rgba(0,0,0,.02);
+  margin: 0 0 6px;
+  border: rgba(0,0,0,.08);
+  border-radius: 8px;
+}
+
+.comment-avatar {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  margin-right: 12px;
+}
+
+.comment-avatar-img {
+  background-size: cover;
+  background-position: center center;
+  border: 2px solid #FFF;
+  border-radius: 50%;
+  box-sizing: border-box;
+  height: 36px;
+  width: 36px;
+}
+
+.comment-text {
+  font-size: .8em;
+}
+.comment-text h2 {
+  font-size: 1.2em;
+  font-weight: 500;
+}
+.comments-auth {
+  margin-bottom: 24px;
+}
+
 app-nav {
   display: block;
   flex: 1 0;

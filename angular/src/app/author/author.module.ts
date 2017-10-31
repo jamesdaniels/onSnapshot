@@ -30,7 +30,6 @@ import {AngularFirestore} from 'angularfire2/firestore';
       <main>
         <div class="author-details" *ngIf="author$ | async; let author">
           <div class="author-avatar" *ngIf="author.avatarUrl">
-            <!--<img [src]="author.avatarUrl" />-->
             <div class="author-avatar-img" [style.background-image]="'url('+author.avatarUrl+')'"></div>
           </div>
           <div class="author-text">
