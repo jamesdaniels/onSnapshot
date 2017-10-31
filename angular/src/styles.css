@@ -6,6 +6,7 @@
 p, h1, h2, h3, h4, h5 {
   padding: 0;
   margin: 0;
+  line-height: 1.2em;
 }
 
 a, a:visited, a:hover {
@@ -233,6 +234,10 @@ ul {
   color: rgba(0, 0, 0, .54);
 }
 
+article p {
+  margin-bottom: 1.2em;
+}
+
 .articles-header {
   font-size: 22px;
   font-weight: 400;
@@ -296,8 +301,14 @@ ul {
   font-size: 1.2em;
   font-weight: 500;
 }
+.comment-text small {
+  color: lightgray;
+}
 .comments-auth {
   margin-bottom: 24px;
+}
+.comments-auth p {
+  font-size: .6em;
 }
 
 app-nav {
