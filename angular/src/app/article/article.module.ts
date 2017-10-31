@@ -19,7 +19,11 @@ import * as firebase from 'firebase/app';
       <nav class="ons-nb">
         <div class="ons-hi">
           <a routerLink="/">
-            <img height="64" width="64" alt="onSnapshot Logo" src="assets/images/onSnapshot_logo.png"/>
+            <picture>
+              <source class="ons-logo" srcset="/assets/images/onSnapshot_logo.webp" type="image/webp">
+              <source class="ons-logo" srcset="/assets/images/onSnapshot_logo.png" type="image/png">
+              <img class="ons-logo" src="/assets/images/onSnapshot_logo.png" alt="onSnapshot logo">
+            </picture>
           </a>
         </div>
 
@@ -50,27 +54,37 @@ import * as firebase from 'firebase/app';
               <img class="inline-icon" src="/assets/icons/if_glasses.svg" />
               {{ viewCount }} {{ viewCount !== 1 ? 'viewers' : 'viewer' }}
             </span>
-            <ng-template #loadingViewers>1 viewer</ng-template>
+            <ng-template #loadingViewers><img class="inline-icon" src="/assets/icons/if_glasses.svg" /> 1 viewer</ng-template>
           </p>
           <div class="article-text" [innerHTML]="article.body"></div>
         </article>
-
-        <ul *ngIf="comments$ | async; let comments">
-          <li *ngFor="let comment of comments">
-            {{ comment.text }}
-            {{ comment.profile | async | json }}
-          </li>
-        </ul>
-
-        <div *ngIf="isAnonymous$ | async">
-          <button (click)="signinWithGoogle()">Sign in with Google to comment</button>
+        
+        <div class="comments" *ngIf="comments$ | async; let comments">
+          <h3 class="comments-heading">Comments</h3>
+          <div *ngFor="let comment of comments">
+            <div class="comment-details" *ngIf="comment.profile | async; let profile">
+              <div class="comment-avatar" *ngIf="profile.avatarUrl">
+                <div class="comment-avatar-img" [style.background-image]="'url('+profile.avatarUrl+')'"></div>
+              </div>
+              <div class="comment-text">
+                <h2>"{{ comment.text }}"</h2>
+                <p>{{ profile.name }} <span *ngIf="comment.timestamp">@ {{ comment.timestamp }}</span></p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div *ngIf="!(isAnonymous$ | async)">
-          <p>Hello {{ (afAuth.authState | async)?.displayName }},</p>
-          <button (click)="addComment('test')">Add test comment</button>
-          <button (click)="signout()">Sign out</button>
+        
+        <div class="comments-auth" *ngIf="article$ | async">
+          <div *ngIf="isAnonymous$ | async">
+            <button (click)="signinWithGoogle()">Sign in with Google to comment</button>
+          </div>
+          <div *ngIf="!(isAnonymous$ | async)">
+            <p>Hello, {{ (afAuth.authState | async)?.displayName }}</p>
+            <button (click)="addComment('This is a test comment!')">Add test comment</button>
+            <button (click)="signout()">Sign out</button>
+          </div>
         </div>
-
+        
         <ng-template class="loading-template" #loading>
           <div class="cssload-thecube">
             <div class="cssload-cube cssload-c1"></div>
@@ -99,7 +113,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
     this.profileRef$ = new BehaviorSubject(undefined);
     this.visitorRef$ = new BehaviorSubject(undefined);
     this.commentCollection$ = new BehaviorSubject(undefined);
-    
+
     this.article$ = route.params.switchMap(params =>
       afs.doc(`articles/${params['id']}`).valueChanges()
     ).map(article => {
@@ -112,8 +126,8 @@ export class ArticleComponent implements OnInit, OnDestroy {
     this.viewCount$ = route.params.switchMap(params =>
       rtdb.object(`articleViewCount/${params['id']}`).valueChanges()
     );
-    
-    this.afAuth.authState.map(user => 
+
+    this.afAuth.authState.map(user =>
       user && afs.firestore.doc(`profiles/${user.uid}`)
     ).subscribe(this.profileRef$);
 
@@ -124,14 +138,14 @@ export class ArticleComponent implements OnInit, OnDestroy {
     // when profile$ changes, if the profile doesn't exist create it (so long as we aren't anon)
     this.profile$.withLatestFrom(this.profileRef$, afAuth.authState)
     .filter(([profile, ref, user]) => !!user && !user.isAnonymous && !!ref && !profile.exists)
-    .subscribe(([_, ref, user]) => 
+    .subscribe(([_, ref, user]) =>
       ref.set({
         name: user.displayName
       })
     );
 
     afAuth.authState.filter(u => !u).subscribe(() => afAuth.auth.signInAnonymously());
-    
+
     this.visitorRef$.distinctUntilChanged().pairwise().subscribe(([prevRef, _]) => {
       prevRef && prevRef.remove();
     });
@@ -145,12 +159,12 @@ export class ArticleComponent implements OnInit, OnDestroy {
     });
 
     this.isAnonymous$ = afAuth.authState.map(user => user && user.isAnonymous);
-    
+
     route.params.map(params =>
       afs.collection(`articles/${params['id']}/comments`)
     ).subscribe(this.commentCollection$);
 
-    this.comments$ = this.commentCollection$.switchMap(collection => 
+    this.comments$ = this.commentCollection$.switchMap(collection =>
       collection.valueChanges().map(comments =>
         comments.map(comment => {
           comment['profile'] = afs.doc(comment['profile'].path).valueChanges();
