@@ -178,16 +178,6 @@ ul {
 }
 
 /** custom **/
-.header-divider, .author-divider {
-  height: 6px;
-  background: url(/assets/images/hr-styled.png) repeat-x 0 0;
-  border: 0;
-}
-
-.header-divider {
-  margin: 0 0 24px 0;
-}
-
 .author-details {
   display: flex;
   flex-direction: row;

@@ -22,8 +22,8 @@ import * as firebase from 'firebase/app';
           <a routerLink="/">
             <picture>
               <source class="ons-logo" srcset="/assets/images/onSnapshot_logo.webp" type="image/webp">
-              <source class="ons-logo" srcset="/assets/images/onSnapshot_logo.png" type="image/png">
-              <img class="ons-logo" src="/assets/images/onSnapshot_logo.png" alt="onSnapshot logo">
+              <source class="ons-logo" srcset="/assets/images/onSnapshot_logo_sm.png" type="image/png">
+              <img class="ons-logo" src="/assets/images/onSnapshot_logo_sm.png" alt="onSnapshot logo">
             </picture>
           </a>
         </div>
