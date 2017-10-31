@@ -36,6 +36,11 @@ ul {
 }
 
 /* Header module */
+.ons-logo {
+  height: 64px;
+  width: 64px;
+}
+
 .ons-nb {
   display: flex;
   justify-content: space-between;

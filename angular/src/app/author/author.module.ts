@@ -13,7 +13,11 @@ import {AngularFirestore} from 'angularfire2/firestore';
       <nav class="ons-nb">
         <div class="ons-hi">
           <a routerLink="/">
-            <img height="64" width="64" alt="onSnapshot Logo" src="assets/images/onSnapshot_logo.png"/>
+            <picture>
+              <source class="ons-logo" srcset="/assets/images/onSnapshot_logo.webp" type="image/webp">
+              <source class="ons-logo" srcset="/assets/images/onSnapshot_logo.png" type="image/png">
+              <img class="ons-logo" src="/assets/images/onSnapshot_logo.png" alt="onSnapshot logo">
+            </picture>
           </a>
         </div>
 

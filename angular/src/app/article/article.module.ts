@@ -19,7 +19,11 @@ import * as firebase from 'firebase/app';
       <nav class="ons-nb">
         <div class="ons-hi">
           <a routerLink="/">
-            <img height="64" width="64" alt="onSnapshot Logo" src="assets/images/onSnapshot_logo.png"/>
+            <picture>
+              <source class="ons-logo" srcset="/assets/images/onSnapshot_logo.webp" type="image/webp">
+              <source class="ons-logo" srcset="/assets/images/onSnapshot_logo.png" type="image/png">
+              <img class="ons-logo" src="/assets/images/onSnapshot_logo.png" alt="onSnapshot logo">
+            </picture>
           </a>
         </div>
 
@@ -70,14 +74,6 @@ import * as firebase from 'firebase/app';
           </div>
         </div>
         
-        <!--
-        <ul *ngIf="comments$ | async; let comments">
-          <li *ngFor="let comment of comments">
-            {{ comment.text }}
-            {{ comment.profile | async | json }}
-          </li>
-        </ul>
-        -->
         <div class="comments-auth" *ngIf="article$ | async">
           <div *ngIf="isAnonymous$ | async">
             <button (click)="signinWithGoogle()">Sign in with Google to comment</button>
