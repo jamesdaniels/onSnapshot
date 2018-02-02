@@ -1,14 +1,9 @@
 {
-  // Example:
-  //
-  // "indexes": [
-  //   {
-  //     "collectionId": "widgets",
-  //     "fields": [
-  //       { "fieldPath": "foo", "mode": "ASCENDING" },
-  //       { "fieldPath": "bar", "mode": "DESCENDING" }
-  //     ]
-  //   }
-  // ]
-  "indexes": []
+  "indexes": [{
+    "collectionId": "articles",
+    "fields": [
+      { "fieldPath": "author", "mode": "ASCENDING" },
+      { "fieldPath": "publishedAt", "mode": "DESCENDING" }
+    ]
+  }]
 }

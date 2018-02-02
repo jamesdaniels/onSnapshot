@@ -16,7 +16,7 @@
     "rewrites": [
       {
         "source": "**",
-        "function": "angularUniversal"
+        "destination": "/index.html"
       }
     ],
     "headers": [

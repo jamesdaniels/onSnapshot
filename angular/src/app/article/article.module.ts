@@ -1,4 +1,4 @@
-import {NgModule, Component, OnInit, OnDestroy} from '@angular/core';
+import { NgModule, Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
@@ -10,6 +10,7 @@ import {AngularFireAuth} from 'angularfire2/auth'
 import {AngularFireDatabase} from 'angularfire2/database';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { isPlatformBrowser } from '@angular/common';
 
 import * as firebase from 'firebase/app';
 
@@ -112,7 +113,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   public profile$: Observable<firebase.firestore.DocumentSnapshot | null>;
   public newCommentText: string = '';
 
-  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, route: ActivatedRoute, public afAuth: AngularFireAuth) {
+  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, route: ActivatedRoute, public afAuth: AngularFireAuth, @Inject(PLATFORM_ID) platformId) {
     this.profileRef$ = new BehaviorSubject(undefined);
     this.visitorRef$ = new BehaviorSubject(undefined);
     this.commentCollection$ = new BehaviorSubject(undefined);
@@ -147,16 +148,17 @@ export class ArticleComponent implements OnInit, OnDestroy {
         avatarUrl: user.photoURL
       })
     );
-
-    afAuth.authState.filter(u => !u).subscribe(() => afAuth.auth.signInAnonymously());
-
+    
     this.visitorRef$.distinctUntilChanged().pairwise().subscribe(([prevRef, _]) => {
       prevRef && prevRef.remove();
     });
 
-    Observable.combineLatest(route.params, afAuth.authState.filter(u => !!u)).map(([params, authState]) =>
-      rtdb.database.ref(`articleVisitors/${params['id']}/${authState.uid}`)
-    ).subscribe(this.visitorRef$);
+    if (isPlatformBrowser(platformId)) {
+      afAuth.authState.filter(u => !u).subscribe(() => afAuth.auth.signInAnonymously());
+      Observable.combineLatest(route.params, afAuth.authState.filter(u => !!u)).map(([params, authState]) =>
+        rtdb.database.ref(`articleVisitors/${params['id']}/${authState.uid}`)
+      ).subscribe(this.visitorRef$);
+    }
 
     this.visitorRef$.filter(r => !!r).subscribe(r => {
       r.set(true).then(() => r.onDisconnect().remove());
