@@ -18,6 +18,7 @@
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
+      "serviceWorker": true,
       "styles": [
         "styles.css"
       ],
@@ -29,13 +30,13 @@
       }
     },
     {
-      "platform": "server",
       "root": "src",
       "outDir": "dist/server",
       "assets": [
         "assets",
         "favicon.ico"
       ],
+      "platform": "server",
       "index": "index.html",
       "main": "main.server.ts",
       "test": "test.ts",
@@ -79,15 +80,15 @@
   },
   "defaults": {
     "styleExt": "css",
+    "class": {
+      "spec": false
+    },
     "component": {
       "spec": false,
       "inlineStyle": true,
       "inlineTemplate": true
     },
     "directive": {
-      "spec": false
-    },
-    "class": {
       "spec": false
     },
     "guard": {
