@@ -9,6 +9,7 @@ import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
 const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('./dist/server/main.bundle');
 
 (global as any).WebSocket = require("ws");
+(global as any).XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 // Faster server renders w/ Prod mode (dev mode never needed)
 enableProdMode();
