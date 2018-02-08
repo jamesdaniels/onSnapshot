@@ -11,7 +11,3 @@ if (environment.production) {
 document.addEventListener('DOMContentLoaded', () => {
   platformBrowserDynamic().bootstrapModule(AppBrowserModule);
 });
-
-if('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
-}

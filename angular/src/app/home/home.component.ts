@@ -8,6 +8,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { User } from '@firebase/auth-types';
 
+import 'rxjs/add/operator/catch';
+
 @Component({
   selector: 'home',
   template: `
@@ -33,8 +35,9 @@ import { User } from '@firebase/auth-types';
         </ul>
       </nav>
 
-      {{ (user$ | async) | json }}
-      
+      <pre>{{ articles$ | async }}</pre>
+      <pre>{{ articleViewCounts$ | async }}</pre>
+
       <section class="ons-sl" *ngIf="articles$ | async; let articles; else loading">
         <article *ngFor="let article of articles; let idx = index">
           <div class="ons-sr">
@@ -75,26 +78,31 @@ export class HomeComponent implements OnInit {
   public catchphrase: string;
   public articles$: Observable<any[]>;
   public articleViewCounts$: Observable<AngularFireAction<firebase.database.DataSnapshot>[]>;
-  public user$: Observable<User|null>;
 
-  constructor(auth: AngularFireAuth, afs: AngularFirestore, rtdb: AngularFireDatabase, @Inject(PLATFORM_ID) platformId) {
+  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, @Inject(PLATFORM_ID) platformId) {
+  
     this.articles$ = afs.collection('articles', ref => ref.orderBy('publishedAt', 'desc'))
-      .snapshotChanges().map(articles =>
-        articles.map(article => {
-          const id = article.payload.doc.id;
-          const author = afs.doc(article.payload.doc.get('author').path).snapshotChanges().map(author => author.payload);
-          const viewCount = this.articleViewCounts$.switchMap(articleViewCounts => 
-            articleViewCounts.filter(value => 
-              value.key == id
-            ).map(value => value.payload.val() as number)
-          )
-          return {id, author, viewCount, doc: article.payload.doc};
-        })
-      );
-
-    this.user$ = auth.authState;
-
-    this.articleViewCounts$ = rtdb.list('articleViewCount').snapshotChanges();
+    .snapshotChanges().map(articles =>
+      articles.map(article => {
+        const id = article.payload.doc.id;
+        const author = afs.doc(article.payload.doc.get('author').path).snapshotChanges().map(author => author.payload);
+        const viewCount = this.articleViewCounts$.switchMap(articleViewCounts => 
+          articleViewCounts.filter(value => 
+            value.key == id
+          ).map(value => value.payload.val() as number)
+        )
+        return {id, author, viewCount, doc: article.payload.doc};
+      })
+    ).catch(e => {
+      console.error(e);
+      return Observable.of([]);
+    });
+   
+    this.articleViewCounts$ = rtdb.list('articleViewCount').snapshotChanges().catch(e => {
+      console.error(e);
+      return Observable.of([]);
+    });;
+    
   }
 
   ngOnInit() {

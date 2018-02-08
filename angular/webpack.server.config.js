@@ -3,6 +3,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -30,6 +31,13 @@ module.exports = {
     ]
   },
   plugins: [
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        ecma: 6,
+        compress: false,
+        mangle: false
+      }
+    }),
     new webpack.ContextReplacementPlugin(
       // fixes WARNING Critical dependency: the request of a dependency is an expression
       /(.+)?angular(\\|\/)core(.+)?/,

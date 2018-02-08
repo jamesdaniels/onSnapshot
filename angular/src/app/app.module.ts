@@ -12,6 +12,8 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { environment } from '../environments/environment';
 import { NavComponent } from './nav/nav.component';
 
+import { ServiceWorkerModule } from '@angular/service-worker';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,6 +23,7 @@ import { NavComponent } from './nav/nav.component';
   imports: [
     CommonModule,
     BrowserModule.withServerTransition({appId: 'my-app'}),
+    ServiceWorkerModule.register('/ngsw-worker.js', {enabled: environment.production}),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full'},
       { path: 'articles/:id', loadChildren: './article/article.module#ArticleModule'},
