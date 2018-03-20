@@ -347,8 +347,9 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
-angularfire2@../../angularfire2/dist/packages-dist:
+angularfire2@./angularfire2.tar.gz:
   version "5.0.0-rc.6"
+  resolved "./angularfire2.tar.gz#fa3da4e0f40f66a6a92c95357bd6d7f9b4d5fc5e"
 
 ansi-align@^2.0.0:
   version "2.0.0"

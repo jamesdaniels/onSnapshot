@@ -5,6 +5,8 @@
 /functions/node_modules
 /functions/dist
 /functions/index.js
+/appengine/dist
+/appengine/node_modules
 /angular/tmp
 /public
 
