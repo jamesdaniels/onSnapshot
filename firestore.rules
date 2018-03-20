@@ -1,10 +1,18 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read;
+  	match /authors/{authorId} {
+    	allow read;
     }
-    match /articles/{id}/comments/{document} {
-      allow write;
+    match /profiles/{userId} {
+    	allow read;
+      allow write: if request.auth.uid == userId;
+    }
+    match /articles/{articleId} {
+    	allow read;
+      match /comments/{commentId} {
+        allow read;
+				allow write: if request.auth != null;
+    	}
     }
   }
 }

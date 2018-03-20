@@ -3,6 +3,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -30,23 +31,13 @@ module.exports = {
     ]
   },
   plugins: [
-    new SWPrecacheWebpackPlugin(
-      {
-        cacheId: 'onSnapshot',
-        dontCacheBustUrlsMatching: /\.\w{8}\./,
-        filename: 'browser/sw.js',
-        staticFileGlobs: [
-          'dist/browser/index.html',
-          'dist/browser/**.chunk.js',
-          'dist/browser/**.bundle.*',
-          'dist/browser/assets/**/*'
-        ],
-        stripPrefix: 'dist/browser/',
-        minify: true,
-        navigateFallback: 'https://onsnapshot.com/index.html',
-        staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        ecma: 6,
+        compress: false,
+        mangle: false
       }
-    ),
+    }),
     new webpack.ContextReplacementPlugin(
       // fixes WARNING Critical dependency: the request of a dependency is an expression
       /(.+)?angular(\\|\/)core(.+)?/,

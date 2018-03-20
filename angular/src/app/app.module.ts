@@ -1,16 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, NgZone } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { CommonModule } from '@angular/common';
 
-import { AngularFireModule } from 'angularfire2';
+import { FirebaseAppConfig, AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { environment } from '../environments/environment';
 import { NavComponent } from './nav/nav.component';
+
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import { NavComponent } from './nav/nav.component';
   imports: [
     CommonModule,
     BrowserModule.withServerTransition({appId: 'my-app'}),
+    ServiceWorkerModule.register('/ngsw-worker.js', {enabled: environment.production}),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full'},
       { path: 'articles/:id', loadChildren: './article/article.module#ArticleModule'},
@@ -30,7 +33,6 @@ import { NavComponent } from './nav/nav.component';
     AngularFireAuthModule,
     AngularFireDatabaseModule
   ],
-  providers: [ ],
   bootstrap: [ ]
 })
 export class AppModule { }

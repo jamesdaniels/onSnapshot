@@ -3,8 +3,12 @@ import {AngularFirestore} from 'angularfire2/firestore';
 import {AngularFireDatabase, AngularFireAction} from 'angularfire2/database';
 import {Observable} from 'rxjs/Observable';
 import { isPlatformBrowser } from '@angular/common';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 import * as firebase from 'firebase/app';
+import { User } from '@firebase/auth-types';
+
+import 'rxjs/add/operator/catch';
 
 @Component({
   selector: 'home',
@@ -30,7 +34,9 @@ import * as firebase from 'firebase/app';
           </li>
         </ul>
       </nav>
-      
+
+      {{ user | async | json }}
+
       <section class="ons-sl" *ngIf="articles$ | async; let articles; else loading">
         <article *ngFor="let article of articles; let idx = index">
           <div class="ons-sr">
@@ -70,9 +76,11 @@ export class HomeComponent implements OnInit {
   public date: Date;
   public catchphrase: string;
   public articles$: Observable<any[]>;
+  public user: Observable<firebase.User|null>;
   public articleViewCounts$: Observable<AngularFireAction<firebase.database.DataSnapshot>[]>;
 
-  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, @Inject(PLATFORM_ID) platformId) {
+  constructor(afAuth: AngularFireAuth, afs: AngularFirestore, rtdb: AngularFireDatabase, @Inject(PLATFORM_ID) platformId) {
+  
     this.articles$ = afs.collection('articles', ref => ref.orderBy('publishedAt', 'desc'))
       .snapshotChanges().map(articles =>
         articles.map(article => {
@@ -86,11 +94,11 @@ export class HomeComponent implements OnInit {
           return {id, author, viewCount, doc: article.payload.doc};
         })
       );
-    if (isPlatformBrowser(platformId)) {
-      this.articleViewCounts$ = rtdb.list('articleViewCount').snapshotChanges();
-    } else {
-      this.articleViewCounts$ = Observable.of([]);
-    }
+
+    this.user = afAuth.authState;
+   
+    this.articleViewCounts$ = rtdb.list('articleViewCount').snapshotChanges();
+    
   }
 
   ngOnInit() {
