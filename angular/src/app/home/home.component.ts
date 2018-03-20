@@ -1,14 +1,10 @@
-import {Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import {AngularFirestore} from 'angularfire2/firestore';
-import {AngularFireDatabase, AngularFireAction} from 'angularfire2/database';
-import {Observable} from 'rxjs/Observable';
+import { Component, OnInit } from '@angular/core';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFireDatabase, AngularFireAction } from 'angularfire2/database';
+import { Observable } from 'rxjs/Observable';
 import { isPlatformBrowser } from '@angular/common';
-import { AngularFireAuth } from 'angularfire2/auth';
 
 import * as firebase from 'firebase/app';
-import { User } from '@firebase/auth-types';
-
-import 'rxjs/add/operator/catch';
 
 @Component({
   selector: 'home',
@@ -34,8 +30,6 @@ import 'rxjs/add/operator/catch';
           </li>
         </ul>
       </nav>
-
-      {{ user | async | json }}
 
       <section class="ons-sl" *ngIf="articles$ | async; let articles; else loading">
         <article *ngFor="let article of articles; let idx = index">
@@ -76,10 +70,9 @@ export class HomeComponent implements OnInit {
   public date: Date;
   public catchphrase: string;
   public articles$: Observable<any[]>;
-  public user: Observable<firebase.User|null>;
   public articleViewCounts$: Observable<AngularFireAction<firebase.database.DataSnapshot>[]>;
 
-  constructor(afAuth: AngularFireAuth, afs: AngularFirestore, rtdb: AngularFireDatabase, @Inject(PLATFORM_ID) platformId) {
+  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase) {
   
     this.articles$ = afs.collection('articles', ref => ref.orderBy('publishedAt', 'desc'))
       .snapshotChanges().map(articles =>
@@ -94,8 +87,6 @@ export class HomeComponent implements OnInit {
           return {id, author, viewCount, doc: article.payload.doc};
         })
       );
-
-    this.user = afAuth.authState;
    
     this.articleViewCounts$ = rtdb.list('articleViewCount').snapshotChanges();
     
