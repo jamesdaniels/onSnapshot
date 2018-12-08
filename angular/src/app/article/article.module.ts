@@ -2,14 +2,14 @@ import { NgModule, Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@an
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
-import {Observable, Subscription} from 'rxjs/Rx';
+import { Observable, Subscription, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { FormsModule }   from '@angular/forms';
+import { filter, map, switchMap, distinctUntilChanged, withLatestFrom, pairwise } from 'rxjs/operators';
 
 import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import {AngularFireAuth} from 'angularfire2/auth'
 import {AngularFireDatabase} from 'angularfire2/database';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { isPlatformBrowser } from '@angular/common';
 
 import * as firebase from 'firebase/app';
@@ -118,66 +118,67 @@ export class ArticleComponent implements OnInit, OnDestroy {
     this.visitorRef$ = new BehaviorSubject(undefined);
     this.commentCollection$ = new BehaviorSubject(undefined);
 
-    this.article$ = route.params.switchMap(params =>
+    this.article$ = route.params.pipe(switchMap(params =>
       afs.doc(`articles/${params['id']}`).valueChanges()
-    ).map(article => {
+    ), map(article => {
       if (article) {
-        article['author'] = afs.doc(article['author'].path).snapshotChanges().map(author => author.payload);
+        article['author'] = afs.doc(article['author'].path).snapshotChanges().pipe(map(author => author.payload));
       }
       return article;
-    });
+    }));
 
-    this.viewCount$ = route.params.switchMap(params =>
+    this.viewCount$ = route.params.pipe(switchMap(params =>
       rtdb.object(`articleViewCount/${params['id']}`).valueChanges()
-    );
+    ));
 
-    this.afAuth.authState.map(user =>
+    this.afAuth.authState.pipe(map(user =>
       user && afs.firestore.doc(`profiles/${user.uid}`)
-    ).subscribe(this.profileRef$);
+    )).subscribe(this.profileRef$);
 
-    this.profile$ = this.profileRef$.switchMap(ref =>
-      ref ? Observable.fromPromise(ref.get()) : Observable.of(null)
-    );
+    this.profile$ = this.profileRef$.pipe(switchMap(ref =>
+      ref ? ref.get() : of(null)
+    ));
 
     // when profile$ changes, if the profile doesn't exist create it (so long as we aren't anon)
-    this.profile$.withLatestFrom(this.profileRef$, afAuth.authState)
-    .filter(([profile, ref, user]) => !!user && !user.isAnonymous && !!ref && !profile.exists)
-    .subscribe(([_, ref, user]) =>
+    this.profile$.pipe(
+      withLatestFrom(this.profileRef$, afAuth.authState),
+      filter(([profile, ref, user]) => !!user && !user.isAnonymous && !!ref && !profile.exists)
+    ).subscribe(([_, ref, user]) =>
       ref.set({
         name: user.displayName,
         avatarUrl: user.photoURL
       })
     );
     
-    this.visitorRef$.distinctUntilChanged().pairwise().subscribe(([prevRef, _]) => {
+    this.visitorRef$.pipe(distinctUntilChanged(), pairwise()).subscribe(([prevRef, _]) => {
       prevRef && prevRef.remove();
     });
 
     if (isPlatformBrowser(platformId)) {
-      afAuth.authState.filter(u => !u).subscribe(() => afAuth.auth.signInAnonymously());
-      Observable.combineLatest(route.params, afAuth.authState.filter(u => !!u)).map(([params, authState]) =>
+      afAuth.authState.pipe(filter(u => !u)).subscribe(() => afAuth.auth.signInAnonymously());
+      combineLatest(route.params, afAuth.authState.pipe(filter(u => !!u))).pipe(map(([params, authState]) =>
         rtdb.database.ref(`articleVisitors/${params['id']}/${authState.uid}`)
-      ).subscribe(this.visitorRef$);
+      )).subscribe(this.visitorRef$);
     }
 
-    this.visitorRef$.filter(r => !!r).subscribe(r => {
+    this.visitorRef$.pipe(filter(r => !!r)).subscribe(r => {
       r.set(true).then(() => r.onDisconnect().remove());
     });
 
-    this.isAnonymous$ = afAuth.authState.map(user => user && user.isAnonymous);
+    this.isAnonymous$ = afAuth.authState.pipe(map(user => user && user.isAnonymous));
 
-    route.params.map(params =>
+    route.params.pipe(map(params =>
       afs.collection(`articles/${params['id']}/comments`, ref => ref.orderBy('commentedAt', 'asc'))
-    ).subscribe(this.commentCollection$);
+    )).subscribe(this.commentCollection$);
 
-    this.comments$ = this.commentCollection$.switchMap(collection =>
-      collection.valueChanges().map(comments =>
+    this.comments$ = this.commentCollection$.pipe(switchMap(collection =>
+      collection.valueChanges().pipe(map(comments =>
         comments.map(comment => {
           comment['profile'] = afs.doc(comment['profile'].path).valueChanges();
           return comment;
         })
-      )
-    );
+      ))
+    ));
   }
 
   signinWithGoogle() {

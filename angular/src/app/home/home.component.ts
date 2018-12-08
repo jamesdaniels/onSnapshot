@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireDatabase, AngularFireAction } from 'angularfire2/database';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 
 import * as firebase from 'firebase/app';
@@ -75,17 +76,19 @@ export class HomeComponent implements OnInit {
   constructor(afs: AngularFirestore, rtdb: AngularFireDatabase) {
   
     this.articles$ = afs.collection('articles', ref => ref.orderBy('publishedAt', 'desc'))
-      .snapshotChanges().map(articles =>
-        articles.map(article => {
-          const id = article.payload.doc.id;
-          const author = afs.doc(article.payload.doc.get('author').path).snapshotChanges().map(author => author.payload);
-          const viewCount = this.articleViewCounts$.switchMap(articleViewCounts => 
-            articleViewCounts.filter(value => 
-              value.key == id
-            ).map(value => value.payload.val() as number)
-          )
-          return {id, author, viewCount, doc: article.payload.doc};
-        })
+      .snapshotChanges().pipe(
+        map(articles =>
+          articles.map(article => {
+            const id = article.payload.doc.id;
+            const author = afs.doc(article.payload.doc.get('author').path).snapshotChanges().pipe(map(author => author.payload));
+            const viewCount = this.articleViewCounts$.pipe(switchMap(articleViewCounts => 
+              articleViewCounts.filter(value => 
+                value.key == id
+              ).map(value => value.payload.val() as number)
+            ))
+            return {id, author, viewCount, doc: article.payload.doc};
+          })
+        )
       );
    
     this.articleViewCounts$ = rtdb.list('articleViewCount').snapshotChanges();

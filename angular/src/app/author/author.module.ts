@@ -2,7 +2,8 @@ import {NgModule, Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
-import {Observable, Subscription} from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
 
 import {AngularFirestore} from 'angularfire2/firestore';
 
@@ -75,20 +76,20 @@ export class AuthorComponent implements OnInit {
   public articles$: Observable<any[]>;
 
   constructor(afs: AngularFirestore, route: ActivatedRoute) {
-    this.author$ = route.params.switchMap(params =>
+    this.author$ = route.params.pipe(switchMap(params =>
       afs.doc(`authors/${params['id']}`).valueChanges()
-    );
-    this.articles$ = route.params.switchMap(params =>
+    ));
+    this.articles$ = route.params.pipe(switchMap(params =>
       afs.collection('articles', ref => ref.orderBy('publishedAt', 'desc')
         .where('author', '==',
           afs.firestore.doc(`authors/${params['id']}`)))
         .snapshotChanges()
-    ).map(articles =>
+    ),map(articles =>
       articles.map(article => {
         const id = article.payload.doc.id;
         return {id, doc: article.payload.doc};
       })
-    );
+    ));
   }
 
   ngOnInit() {
