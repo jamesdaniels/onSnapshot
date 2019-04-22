@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { AngularFireDatabase, AngularFireAction } from 'angularfire2/database';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireDatabase, AngularFireAction } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
@@ -47,7 +47,7 @@ import * as firebase from 'firebase/app';
               </span>
               <ng-template #loadingAuthor>Loading author...</ng-template>
               <span class="article-date">
-                | {{ article.doc.get('publishedAt') | date: 'short' }}
+                | {{ article.doc.get('publishedAt').toDate() | date: 'short' }}
               </span>
               <span>
                 | {{ (article.viewCount | async) || 0 }} {{ (article.viewCount | async) !== 1 ? 'viewers' : 'viewer' }}

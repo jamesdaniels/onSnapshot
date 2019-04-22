@@ -5,7 +5,7 @@ import {ActivatedRoute} from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 
-import {AngularFirestore} from 'angularfire2/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 
 @Component({
   selector: 'author-view',

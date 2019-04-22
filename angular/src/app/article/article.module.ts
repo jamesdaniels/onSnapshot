@@ -6,9 +6,9 @@ import { Observable, Subscription, BehaviorSubject, of, combineLatest } from 'rx
 import { FormsModule }   from '@angular/forms';
 import { filter, map, switchMap, distinctUntilChanged, withLatestFrom, pairwise } from 'rxjs/operators';
 
-import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
-import {AngularFireAuth} from 'angularfire2/auth'
-import {AngularFireDatabase} from 'angularfire2/database';
+import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
+import {AngularFireAuth} from '@angular/fire/auth'
+import {AngularFireDatabase} from '@angular/fire/database';
 
 import { isPlatformBrowser } from '@angular/common';
 
@@ -118,14 +118,21 @@ export class ArticleComponent implements OnInit, OnDestroy {
     this.visitorRef$ = new BehaviorSubject(undefined);
     this.commentCollection$ = new BehaviorSubject(undefined);
 
-    this.article$ = route.params.pipe(switchMap(params =>
-      afs.doc(`articles/${params['id']}`).valueChanges()
-    ), map(article => {
-      if (article) {
-        article['author'] = afs.doc(article['author'].path).snapshotChanges().pipe(map(author => author.payload));
-      }
-      return article;
-    }));
+    this.article$ = route.params.pipe(
+      distinctUntilChanged((a,b) => JSON.stringify(a) === JSON.stringify(b)),
+      switchMap(params =>
+        afs.doc(`articles/${params['id']}`).valueChanges()
+      ),
+      distinctUntilChanged((a,b) => JSON.stringify(a) === JSON.stringify(b)),
+      map(article => {
+        console.log(article);
+        if (article && article['author']) {
+          article['author'] = afs.doc(article['author'].path).snapshotChanges().pipe(map(author => author.payload));
+        }
+        return article;
+      },
+      distinctUntilChanged((a,b) => JSON.stringify(a) === JSON.stringify(b)),
+    ));
 
     this.viewCount$ = route.params.pipe(switchMap(params =>
       rtdb.object(`articleViewCount/${params['id']}`).valueChanges()

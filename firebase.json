@@ -16,7 +16,9 @@
     "rewrites": [
       {
         "source": "**",
-        "function": "angularUniversal"
+        "run": {
+          "serviceId": "universal"
+        }
       }
     ],
     "headers": [

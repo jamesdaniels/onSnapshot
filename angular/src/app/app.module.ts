@@ -1,18 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, NgZone } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, PreloadAllModules } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { CommonModule } from '@angular/common';
 
-import { FirebaseAppConfig, AngularFireModule } from 'angularfire2';
-import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { FirebaseAppConfig, AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { environment } from '../environments/environment';
 import { NavComponent } from './nav/nav.component';
 
 import { ServiceWorkerModule } from '@angular/service-worker';
+//import { EnableStateTransferToken } from '@angular/fire/firestore';
+import { PrebootModule } from 'preboot';
 
 @NgModule({
   declarations: [
@@ -28,11 +30,15 @@ import { ServiceWorkerModule } from '@angular/service-worker';
       { path: '', component: HomeComponent, pathMatch: 'full'},
       { path: 'articles/:id', loadChildren: './article/article.module#ArticleModule'},
       { path: 'authors/:id', loadChildren: './author/author.module#AuthorModule'}
-    ]),
+    ], { preloadingStrategy: PreloadAllModules, initialNavigation: 'enabled' }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    PrebootModule.withConfig({ appRoot: 'app-root' })
   ],
-  bootstrap: [ ]
+  bootstrap: [ ],
+  providers: [
+//    { provide: EnableStateTransferToken, useValue: true }
+  ]
 })
 export class AppModule { }
