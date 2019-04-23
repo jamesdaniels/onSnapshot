@@ -10,7 +10,3 @@ export const viewCounter = functions.database.ref('/articleVisitors/{articleId}/
         }
     });
 });
-
-export const angularUniversal = functions.https.onRequest((request, response) => {
-    require(`${process.cwd()}/dist/onsnapshot-webpack/server`).app(request, response);
-});

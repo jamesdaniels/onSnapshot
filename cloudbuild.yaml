@@ -1,0 +1,70 @@
+steps:
+# pull the cache
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  id: FIREBASE_DOCKER_PULL
+  waitFor: ['-']
+  args:
+  - '-c'
+  - |
+    docker pull gcr.io/$PROJECT_ID/firebase:latest || exit 0
+# setup our Firebase directory and install the CLI
+- name: 'gcr.io/cloud-builders/docker'
+  id: FIREBASE_DOCKER_BUILD
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/firebase:$BUILD_ID', '--cache-from', 'gcr.io/$PROJECT_ID/firebase:latest', '.']
+  waitFor:
+  - FIREBASE_DOCKER_PULL
+# push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/firebase:$BUILD_ID']
+  id: FIREBASE_DOCKER_PUSH
+  waitFor:
+    - FIREBASE_DOCKER_BUILD
+# deploy our Cloud Functions for Firebase, Rules, and Firebase Hosting site
+- name: 'gcr.io/$PROJECT_ID/firebase:$BUILD_ID'
+  id: FIREBASE_CLI_DEPLOY
+  entrypoint: 'bash'
+  args: ['-c', 'firebase deploy -P $PROJECT_ID --token $$FIREBASE_TOKEN --non-interactive']
+  secretEnv:
+    - FIREBASE_TOKEN
+  waitFor:
+    - FIREBASE_DOCKER_PUSH
+
+# pull the cache
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  id: CLOUD_RUN_PULL
+  waitFor: ['-']
+  args:
+  - '-c'
+  - |
+    docker pull gcr.io/$PROJECT_ID/universal:latest || exit 0
+# build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  dir: 'angular'
+  id: CLOUD_RUN_BUILD
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/universal:$BUILD_ID', '--cache-from', 'gcr.io/$PROJECT_ID/universal:latest', '.']
+  waitFor:
+  - CLOUD_RUN_PULL
+# push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  dir: 'angular'
+  args: ['push', 'gcr.io/$PROJECT_ID/universal:$BUILD_ID']
+  id: CLOUD_RUN_PUSH
+  waitFor:
+    - CLOUD_RUN_BUILD
+# deploy the container to GKE
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['beta', 'run', 'deploy', 'universal', '--image', 'gcr.io/$PROJECT_ID/universal:$BUILD_ID', '--region', 'us-central1']
+  id: CLOUD_RUN_DEPLOY
+  waitFor:
+    - CLOUD_RUN_PUSH
+
+secrets:
+- kmsKeyName: projects/onsnapshot/locations/global/keyRings/cloudbuild-ring/cryptoKeys/cloudbuild-key
+  secretEnv:
+    FIREBASE_TOKEN: CiQANB2PTWPbq51e04pCCFMfUT/K5rzni9Y9l8BouIMQy+h57d0SVwB0j9PfPkC7b8M67ffpuiU0HilpXr1TjuERtXIciRgvmvOCY8Yi8NjmW8835WZ3Q4b5IwfzdRky9F8KzqpszAz4gW94Rj7vSmTkln6rx+g2nNkXmPYyng==
+
+images:
+- gcr.io/$PROJECT_ID/universal
+- gcr.io/$PROJECT_ID/firebase

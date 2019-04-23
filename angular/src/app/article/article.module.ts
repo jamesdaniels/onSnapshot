@@ -50,7 +50,7 @@ import * as firebase from 'firebase/app';
             <ng-template #loadingAuthor>Loading author...</ng-template>
             <span>
               <img class="inline-icon" src="/assets/icons/if_calendar.svg" />
-              {{ article.publishedAt | date: 'fullDate' }}
+              {{ article.publishedAt.toDate() | date: 'fullDate' }}
             </span>
             <span *ngIf="viewCount$ | async; let viewCount; else loadingViewers">
               <img class="inline-icon" src="/assets/icons/if_glasses.svg" />
@@ -70,7 +70,7 @@ import * as firebase from 'firebase/app';
               </div>
               <div class="comment-text">
                 <h2>"{{ comment.text }}"</h2>
-                <p>{{ profile.name }} <small *ngIf="comment.commentedAt">@ {{ comment.commentedAt }}</small></p>
+                <p>{{ profile.name }} <small *ngIf="comment.commentedAt">@ {{ comment.commentedAt.toDate() | date: 'fullDate' }}</small></p>
               </div>
             </div>
           </div>

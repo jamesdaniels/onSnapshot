@@ -52,7 +52,7 @@ import {AngularFirestore} from '@angular/fire/firestore';
                 <a [routerLink]="['/articles', article.id]">{{ article.doc.get('title') }}</a>
               </h4>
               <div class="ons-sm">
-                published {{ article.doc.get('publishedAt') | date: 'fullDate' }}
+                published {{ article.doc.get('publishedAt').toDate() | date: 'fullDate' }}
               </div>
             </div>
           </article>
