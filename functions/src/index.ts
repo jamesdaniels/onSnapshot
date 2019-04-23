@@ -10,3 +10,14 @@ export const viewCounter = functions.database.ref('/articleVisitors/{articleId}/
         }
     });
 });
+
+export const exportVisitors = functions.database.ref('/articleVisitors/{articleId}/{uid}').onWrite(async (change, context) => {
+    const { PubSub } = require('@google-cloud/pubsub');
+    const pubsub = new PubSub();
+    const dataBuffer = Buffer.from(JSON.stringify({
+        visitor: context.params.uid,
+        left: !change.after.exists() && change.before.exists(),
+        article: context.params.articleId
+    }));
+    await pubsub.topic('visitors').publish(dataBuffer);
+});
