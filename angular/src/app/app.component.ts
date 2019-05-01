@@ -10,6 +10,7 @@ import { Meta, Title } from '@angular/platform-browser';
 })
 export class AppComponent {
   constructor(appRef: ApplicationRef) {
-    appRef.isStable.subscribe(isStable => console.log('isStable', isStable));
+    // Good performance monitoring opp
+    // appRef.isStable.subscribe(isStable => console.log('isStable', isStable));
   }
 }

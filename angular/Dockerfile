@@ -7,4 +7,6 @@ RUN npm i
 COPY . .
 RUN npm run build
 
+EXPOSE 4200
+
 CMD node ./dist/onsnapshot-webpack/server.js

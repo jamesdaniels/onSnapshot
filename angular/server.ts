@@ -2,6 +2,10 @@
 import 'zone.js/dist/zone-node';
 import 'reflect-metadata';
 
+import * as TraceAgent from '@google-cloud/trace-agent';
+
+TraceAgent.start();
+
 import { enableProdMode } from '@angular/core';
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
@@ -49,7 +53,7 @@ app.get('*', (req, res) => {
 
 if (!process.env.FUNCTION_NAME) {
 
-  const PORT = process.env.PORT || 4000;
+  const PORT = process.env.PORT || 4200;
   app.listen(PORT, () => {
     console.log(`Node server listening on http://localhost:${PORT}`);
   });

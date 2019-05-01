@@ -125,7 +125,6 @@ export class ArticleComponent implements OnInit, OnDestroy {
       ),
       distinctUntilChanged((a,b) => JSON.stringify(a) === JSON.stringify(b)),
       map(article => {
-        console.log(article);
         if (article && article['author']) {
           article['author'] = afs.doc(article['author'].path).snapshotChanges().pipe(map(author => author.payload));
         }

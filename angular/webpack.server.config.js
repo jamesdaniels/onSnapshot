@@ -13,6 +13,7 @@ module.exports = {
   mode: 'development',
   target: 'node',
   externals: [
+    /^@google-cloud\/trace-agent/,
   /* There are a bunch of issues if we webpack firebase:
       A) the CJS versions of things like firebase/firestore aren't registering on the app
       B) grpc has native components, it is very unhappy when webpacked
