@@ -4,6 +4,11 @@
 
 We're utilizing packages from the [Angular Universal @nguniversal](https://github.com/angular/universal) repo, such as [ng-module-map-ngfactory-loader](https://github.com/angular/universal/tree/master/modules/module-map-ngfactory-loader) to enable Lazy Loading.
 
+```bash
+$ gcloud builds submit --tag gcr.io/[PROJECT-ID]/universal
+$ gcloud beta run deploy --image gcr.io/[PROJECT-ID]/universal
+```
+
 ---
 
 ## Static or Dynamic
