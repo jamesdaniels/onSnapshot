@@ -4,6 +4,7 @@ import {RouterModule} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
+import * as firebase from 'firebase/app';
 
 import {AngularFirestore} from '@angular/fire/firestore';
 
@@ -76,6 +77,16 @@ export class AuthorComponent implements OnInit {
   public articles$: Observable<any[]>;
 
   constructor(afs: AngularFirestore, route: ActivatedRoute) {
+
+    // WIP
+    // Is this user subscribed to push notifications?
+    import('firebase/messaging').then(() => {
+      return firebase.messaging().getToken();
+    }).then(token => {
+      // TODO if they are, let's show a subscribe button
+      console.log(token);
+    })
+
     this.author$ = route.params.pipe(switchMap(params =>
       afs.doc(`authors/${params['id']}`).valueChanges()
     ));
