@@ -19,10 +19,10 @@
     "ng": "ng",
     "l": "ng serve",
     "start": "npm run build && npm run serve",
-    "build": "ng build --aot --prod && ng run onsnapshot:server && webpack --config webpack.server.config.js",
+    "build": "ng build --aot --prod && ng run onsnapshot:server && tsc server.ts | true",
     "build:firebase": "npm run build && cp -r ./dist/onsnapshot/* ../public && rm ../public/index.html",
     "build:flex": "npm run build && rm -rf ../appengine/dist && cp -r dist ../appengine",
-    "serve": "node dist/onsnapshot-webpack/server"
+    "serve": "node ./server.js"
   },
   "private": true,
   "dependencies": {

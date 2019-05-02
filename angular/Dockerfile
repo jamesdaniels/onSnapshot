@@ -9,4 +9,4 @@ RUN npm run build
 
 EXPOSE 4200
 
-CMD node ./dist/onsnapshot-webpack/server.js
+CMD node ./server.js

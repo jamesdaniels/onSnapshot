@@ -2,6 +2,7 @@
 
 # compiled output
 /angular/dist
+/angular/server.js
 /functions/node_modules
 /functions/dist
 /functions/index.js
