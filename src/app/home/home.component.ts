@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireDatabase, AngularFireAction } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 
 import * as firebase from 'firebase/app';
 
@@ -49,7 +49,7 @@ import * as firebase from 'firebase/app';
               <span class="article-date">
                 | {{ article.doc.get('publishedAt').toDate() | date: 'short' }}
               </span>
-              <span>
+              <span *ngIf="!isServer">
                 | {{ (article.viewCount | async) || 0 }} {{ (article.viewCount | async) !== 1 ? 'viewers' : 'viewer' }}
               </span>
             </div>
@@ -72,8 +72,11 @@ export class HomeComponent implements OnInit {
   public catchphrase: string;
   public articles$: Observable<any[]>;
   public articleViewCounts$: Observable<AngularFireAction<firebase.database.DataSnapshot>[]>;
+  public isServer: Boolean;
 
-  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase) {
+  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, @Inject(PLATFORM_ID) platformId) {
+
+    this.isServer = isPlatformServer(platformId);
 
     this.articles$ = afs.collection('articles', ref => ref.orderBy('publishedAt', 'desc'))
       .snapshotChanges().pipe(

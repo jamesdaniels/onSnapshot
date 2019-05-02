@@ -1,5 +1,5 @@
 import { NgModule, Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, isPlatformServer} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
 import { Observable, Subscription, BehaviorSubject, of, combineLatest } from 'rxjs';
@@ -52,41 +52,45 @@ import * as firebase from 'firebase/app';
               <img class="inline-icon" src="/assets/icons/if_calendar.svg" />
               {{ article.publishedAt.toDate() | date: 'fullDate' }}
             </span>
-            <span *ngIf="viewCount$ | async; let viewCount; else loadingViewers">
-              <img class="inline-icon" src="/assets/icons/if_glasses.svg" />
-              {{ viewCount }} {{ viewCount !== 1 ? 'viewers' : 'viewer' }}
-            </span>
+            <ng-container *ngIf="!isServer">
+              <span *ngIf="viewCount$ | async; let viewCount; else loadingViewers">
+                <img class="inline-icon" src="/assets/icons/if_glasses.svg" />
+                {{ viewCount }} {{ viewCount !== 1 ? 'viewers' : 'viewer' }}
+              </span>
+            </ng-container>
             <ng-template #loadingViewers><img class="inline-icon" src="/assets/icons/if_glasses.svg" /> 1 viewer</ng-template>
           </p>
           <div class="article-text" [innerHTML]="article.body"></div>
         </article>
 
-        <div class="comments" *ngIf="comments$ | async; let comments">
-          <h3 class="comments-heading">Comments</h3>
-          <div *ngFor="let comment of comments">
-            <div class="comment-details" *ngIf="comment.profile | async; let profile">
-              <div class="comment-avatar" *ngIf="profile.avatarUrl">
-                <div class="comment-avatar-img" [style.background-image]="'url('+profile.avatarUrl+')'"></div>
-              </div>
-              <div class="comment-text">
-                <h2>"{{ comment.text }}"</h2>
-                <p>{{ profile.name }} <small *ngIf="comment.commentedAt">@ {{ comment.commentedAt.toDate() | date: 'fullDate' }}</small></p>
+        <ng-container *ngIf="!isServer; else loading">
+          <div class="comments" *ngIf="comments$ | async; let comments">
+            <h3 class="comments-heading">Comments</h3>
+            <div *ngFor="let comment of comments">
+              <div class="comment-details" *ngIf="comment.profile | async; let profile">
+                <div class="comment-avatar" *ngIf="profile.avatarUrl">
+                  <div class="comment-avatar-img" [style.background-image]="'url('+profile.avatarUrl+')'"></div>
+                </div>
+                <div class="comment-text">
+                  <h2>"{{ comment.text }}"</h2>
+                  <p>{{ profile.name }} <small *ngIf="comment.commentedAt">@ {{ comment.commentedAt.toDate() | date: 'fullDate' }}</small></p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="comments-auth" *ngIf="article$ | async">
-          <h4>Add your 2¢</h4>
-          <div *ngIf="isAnonymous$ | async">
-            <button (click)="signinWithGoogle()">Sign in with Google to comment</button>
+          <div class="comments-auth" *ngIf="article$ | async">
+            <h4>Add your 2¢</h4>
+            <div *ngIf="isAnonymous$ | async">
+              <button (click)="signinWithGoogle()">Sign in with Google to comment</button>
+            </div>
+            <div *ngIf="!(isAnonymous$ | async)">
+              <p><textarea [(ngModel)]="newCommentText" name="newCommentText" rows="4" cols="50"></textarea></p>
+              <p>Commenting as {{ (afAuth.authState | async)?.displayName }} <button (click)="addComment()" [disabled]="newCommentText == ''">Add comment</button></p>
+              <p><button (click)="signout()">Sign out</button></p>
+            </div>
           </div>
-          <div *ngIf="!(isAnonymous$ | async)">
-            <p><textarea [(ngModel)]="newCommentText" name="newCommentText" rows="4" cols="50"></textarea></p>
-            <p>Commenting as {{ (afAuth.authState | async)?.displayName }} <button (click)="addComment()" [disabled]="newCommentText == ''">Add comment</button></p>
-            <p><button (click)="signout()">Sign out</button></p>
-          </div>
-        </div>
+        </ng-container>
 
         <ng-template class="loading-template" #loading>
           <div class="cssload-thecube">
@@ -112,17 +116,14 @@ export class ArticleComponent implements OnInit, OnDestroy {
   public profileRef$: BehaviorSubject<firebase.firestore.DocumentReference | null>;
   public profile$: Observable<firebase.firestore.DocumentSnapshot | null>;
   public newCommentText: string = '';
+  public isServer: Boolean;
 
   constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, route: ActivatedRoute, public afAuth: AngularFireAuth, @Inject(PLATFORM_ID) platformId) {
+    this.isServer = isPlatformServer(platformId);
+
     this.profileRef$ = new BehaviorSubject(undefined);
     this.visitorRef$ = new BehaviorSubject(undefined);
     this.commentCollection$ = new BehaviorSubject(undefined);
-
-    // Slow code, we should remove this
-    let x;
-    for (var i = 0; i < 10000000; i++) {
-      x = new Date();
-    }
 
     this.article$ = route.params.pipe(
       distinctUntilChanged((a,b) => JSON.stringify(a) === JSON.stringify(b)),
