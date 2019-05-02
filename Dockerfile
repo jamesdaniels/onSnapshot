@@ -9,4 +9,4 @@ RUN npm run build:all
 
 RUN npm i -g firebase-tools@6.7.2
 
-CMD node ./server.js
+CMD npm run serve:ssr

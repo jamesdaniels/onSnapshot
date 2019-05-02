@@ -28,7 +28,7 @@ steps:
   - -c
   - |
     npm i
-    npm run build
+    npm run build:prod
     firebase deploy --token $$FIREBASE_TOKEN --non-interactive
   secretEnv: FIREBASE_TOKEN
   waitFor: DOCKER_BUILD

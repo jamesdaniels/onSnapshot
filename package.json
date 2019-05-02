@@ -18,10 +18,10 @@
   "scripts": {
     "ng": "ng",
     "serve": "ng serve",
-    "start": "npm run build:all && npm run serve:ssr",
-    "build": "ng build --aot --prod",
+    "ssr": "npm run build:all && npm run serve:ssr",
+    "build:prod": "ng build --aot --prod",
     "build:ssr": "ng run onsnapshot:server && (tsc server.ts | true)",
-    "build:all": "npm run build && npm run build:ssr",
+    "build:all": "npm run build:prod && npm run build:ssr",
     "serve:ssr": "node ./server.js"
   },
   "private": true,
