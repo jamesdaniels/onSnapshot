@@ -1,6 +1,3 @@
-import * as TraceAgent from '@google-cloud/trace-agent';
-TraceAgent.start();
-
 // These are important and needed before anything else
 import 'zone.js/dist/zone-node';
 import 'reflect-metadata';
@@ -42,7 +39,7 @@ app.engine('html', ngExpressEngine({
 app.set('view engine', 'html');
 app.set('views', join(DIST_FOLDER, APP_NAME));
 
-// Serve static files 
+// Serve static files
 app.get('*.*', express.static(join(DIST_FOLDER, APP_NAME)));
 
 // All regular routes use the Universal engine

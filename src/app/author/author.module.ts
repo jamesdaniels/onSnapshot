@@ -1,10 +1,9 @@
-import {NgModule, Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {NgModule, Component, OnInit, Inject, PLATFORM_ID} from '@angular/core';
+import {CommonModule, isPlatformServer} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-import * as firebase from 'firebase/app';
 
 import {AngularFirestore} from '@angular/fire/firestore';
 
@@ -32,7 +31,7 @@ import {AngularFirestore} from '@angular/fire/firestore';
           </li>
         </ul>
       </nav>
-      
+
       <main>
         <div class="author-details" *ngIf="author$ | async; let author">
           <div class="author-avatar" *ngIf="author.avatarUrl">
@@ -75,17 +74,15 @@ export class AuthorComponent implements OnInit {
   public catchphrase: string;
   public author$: Observable<any>;
   public articles$: Observable<any[]>;
+  public isServer: Boolean;
 
-  constructor(afs: AngularFirestore, route: ActivatedRoute) {
+  constructor(afs: AngularFirestore, route: ActivatedRoute, @Inject(PLATFORM_ID) platformId) {
+    this.isServer = isPlatformServer(platformId);
 
-    // WIP
-    // Is this user subscribed to push notifications?
-    import('firebase/messaging').then(() => {
-      return firebase.messaging().getToken();
-    }).then(token => {
-      // TODO if they are, let's show a subscribe button
-      console.log(token);
-    })
+    // Simulate an error that only happens in Node.js
+    if (this.isServer) {
+      throw new Error('Something broke on the server!');
+    }
 
     this.author$ = route.params.pipe(switchMap(params =>
       afs.doc(`authors/${params['id']}`).valueChanges()

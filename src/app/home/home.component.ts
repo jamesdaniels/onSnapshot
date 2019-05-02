@@ -1,9 +1,9 @@
-import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireDatabase, AngularFireAction } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 
 import * as firebase from 'firebase/app';
 
@@ -49,7 +49,7 @@ import * as firebase from 'firebase/app';
               <span class="article-date">
                 | {{ article.doc.get('publishedAt').toDate() | date: 'short' }}
               </span>
-              <span *ngIf="!isServer">
+              <span>
                 | {{ (article.viewCount | async) || 0 }} {{ (article.viewCount | async) !== 1 ? 'viewers' : 'viewer' }}
               </span>
             </div>
@@ -72,20 +72,17 @@ export class HomeComponent implements OnInit {
   public catchphrase: string;
   public articles$: Observable<any[]>;
   public articleViewCounts$: Observable<AngularFireAction<firebase.database.DataSnapshot>[]>;
-  public isServer: Boolean;
 
-  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, @Inject(PLATFORM_ID) platformId) {
+  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase) {
 
-    this.isServer = isPlatformServer(platformId);
-  
     this.articles$ = afs.collection('articles', ref => ref.orderBy('publishedAt', 'desc'))
       .snapshotChanges().pipe(
         map(articles =>
           articles.map(article => {
             const id = article.payload.doc.id;
             const author = afs.doc(article.payload.doc.get('author').path).snapshotChanges().pipe(map(author => author.payload));
-            const viewCount = this.articleViewCounts$.pipe(switchMap(articleViewCounts => 
-              articleViewCounts.filter(value => 
+            const viewCount = this.articleViewCounts$.pipe(switchMap(articleViewCounts =>
+              articleViewCounts.filter(value =>
                 value.key == id
               ).map(value => value.payload.val() as number)
             ))
@@ -93,9 +90,9 @@ export class HomeComponent implements OnInit {
           })
         )
       );
-   
+
     this.articleViewCounts$ = rtdb.list('articleViewCount').snapshotChanges();
-    
+
   }
 
   ngOnInit() {
