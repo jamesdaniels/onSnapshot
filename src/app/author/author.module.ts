@@ -1,5 +1,5 @@
-import {NgModule, Component, OnInit, Inject, PLATFORM_ID} from '@angular/core';
-import {CommonModule, isPlatformServer} from '@angular/common';
+import {NgModule, Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {ActivatedRoute} from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -76,14 +76,7 @@ export class AuthorComponent implements OnInit {
   public articles$: Observable<any[]>;
   public isServer: Boolean;
 
-  constructor(afs: AngularFirestore, route: ActivatedRoute, @Inject(PLATFORM_ID) platformId) {
-    this.isServer = isPlatformServer(platformId);
-
-    // Simulate an error that only happens in Node.js
-    if (this.isServer) {
-      throw new Error('Something broke on the server!');
-    }
-
+  constructor(afs: AngularFirestore, route: ActivatedRoute) {
     this.author$ = route.params.pipe(switchMap(params =>
       afs.doc(`authors/${params['id']}`).valueChanges()
     ));
