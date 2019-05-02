@@ -1,3 +1,12 @@
+import * as TraceAgent from '@google-cloud/trace-agent';
+TraceAgent.start();
+
+import * as Profiler from '@google-cloud/profiler';
+Profiler.start();
+
+import * as DebugAgent from '@google-cloud/debug-agent';
+DebugAgent.start();
+
 // These are important and needed before anything else
 import 'zone.js/dist/zone-node';
 import 'reflect-metadata';
