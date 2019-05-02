@@ -20,13 +20,23 @@ steps:
   waitFor: DOCKER_BUILD
 
 # deploy the Firebase application
-- name: 'gcr.io/$PROJECT_ID/universal:$BUILD_ID'
+# TODO figure out why I have to NPM install again and rebuild
+- name: 'gcr.io/$PROJECT_ID/universal:bb22aadb-bba6-4d17-8369-11b6a2708d6a'
   id: DEPLOY_FIREBASE
-  entrypoint: 'npx'
+  entrypoint: 'sh'
   args:
-  - firebase
-  - deploy
-  - --non-interactive
+  - -c
+  - |
+    npm i
+    npm run build
+    firebase deploy --token $$FIREBASE_TOKEN --non-interactive
+  secretEnv: FIREBASE_TOKEN
   waitFor: DOCKER_BUILD
+
+# TODO Don't use token once fixed https://github.com/firebase/firebase-tools/issues/787
+secrets:
+- kmsKeyName: projects/onsnapshot/locations/global/keyRings/cloudbuild-ring/cryptoKeys/cloudbuild-key
+  secretEnv:
+    FIREBASE_TOKEN: CiQANB2PTWPbq51e04pCCFMfUT/K5rzni9Y9l8BouIMQy+h57d0SVwB0j9PfPkC7b8M67ffpuiU0HilpXr1TjuERtXIciRgvmvOCY8Yi8NjmW8835WZ3Q4b5IwfzdRky9F8KzqpszAz4gW94Rj7vSmTkln6rx+g2nNkXmPYyng==
 
 images: gcr.io/$PROJECT_ID/universal
