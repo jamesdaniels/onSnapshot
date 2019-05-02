@@ -18,10 +18,10 @@
   "scripts": {
     "ng": "ng",
     "l": "ng serve",
-    "start": "npm run build && npm run serve",
-    "build": "ng build --aot --prod && ng run onsnapshot:server && tsc server.ts | true",
-    "build:firebase": "npm run build && cp -r ./dist/onsnapshot/* ../public && rm ../public/index.html",
-    "build:flex": "npm run build && rm -rf ../appengine/dist && cp -r dist ../appengine",
+    "start": "npm run build:all && npm run serve",
+    "build": "ng build --aot --prod",
+    "build:ssr": "ng run onsnapshot:server && (tsc server.ts | true)",
+    "build:all": "npm run build && npm run build:ssr",
     "serve": "node ./server.js"
   },
   "private": true,
@@ -59,6 +59,7 @@
     "@angular/language-service": "^7.0.0",
     "@types/node": "^8.0.30",
     "cpy-cli": "^1.0.1",
+    "firebase-tools": "^6.7.2",
     "http-server": "^0.10.0",
     "reflect-metadata": "^0.1.10",
     "sw-precache-webpack-plugin": "^0.11.4",

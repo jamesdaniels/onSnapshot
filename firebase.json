@@ -4,6 +4,7 @@
   },
   "functions": {
     "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" i",
       "npm --prefix \"$RESOURCE_DIR\" run lint",
       "npm --prefix \"$RESOURCE_DIR\" run build"
     ],
@@ -18,8 +19,9 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "public",
+    "public": "dist/onsnapshot",
     "ignore": [
+      "index.html",
       "firebase.json",
       "**/.*",
       "**/node_modules/**"

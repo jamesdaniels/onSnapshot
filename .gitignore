@@ -1,18 +1,15 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/angular/dist
-/angular/server.js
+/dist
+/server.js
 /functions/node_modules
-/functions/dist
-/functions/index.js
-/appengine/dist
-/appengine/node_modules
-/angular/tmp
+/functions/lib
+/tmp
 /public
 
 # dependencies
-/angular/node_modules
+/node_modules
 
 # IDEs and editors
 /.idea
@@ -33,15 +30,15 @@
 # misc
 /.sass-cache
 /connect.lock
-/angular/coverage/*
-/angular/libpeerconnection.log
+/overage/*
+/libpeerconnection.log
 npm-debug.log
 testem.log
-/angular/typings
+/typings
 
 # e2e
-/angular/e2e/*.js
-/angular/e2e/*.map
+/e2e/*.js
+/e2e/*.map
 
 #System Files
 .DS_Store

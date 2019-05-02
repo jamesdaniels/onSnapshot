@@ -1,10 +1,9 @@
+import * as TraceAgent from '@google-cloud/trace-agent';
+TraceAgent.start();
+
 // These are important and needed before anything else
 import 'zone.js/dist/zone-node';
 import 'reflect-metadata';
-
-import * as TraceAgent from '@google-cloud/trace-agent';
-
-TraceAgent.start();
 
 import { enableProdMode } from '@angular/core';
 import { ngExpressEngine } from '@nguniversal/express-engine';
