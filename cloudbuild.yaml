@@ -1,0 +1,22 @@
+steps:
+# build the base image using Kaniko for caching
+- name: 'gcr.io/kaniko-project/executor:latest'
+  waitFor: ['-']
+  id: DOCKER_BUILD
+  args:
+  - --destination=gcr.io/$PROJECT_ID/universal:$BUILD_ID
+  - --cache=true
+
+# deploy the container to Cloud Run
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - beta
+  - run
+  - deploy
+  - universal
+  - --image=gcr.io/$PROJECT_ID/universal:$BUILD_ID
+  - --region=us-central1
+  id: DEPLOY_CLOUD_RUN
+  waitFor: [DOCKER_BUILD]
+
+images: ['gcr.io/$PROJECT_ID/universal']
