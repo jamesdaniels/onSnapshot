@@ -21,7 +21,7 @@ steps:
 
 # deploy the Firebase application
 # TODO figure out why I have to NPM install again and rebuild
-- name: 'gcr.io/$PROJECT_ID/universal:bb22aadb-bba6-4d17-8369-11b6a2708d6a'
+- name: 'gcr.io/$PROJECT_ID/universal:$BUILD_ID'
   id: DEPLOY_FIREBASE
   entrypoint: 'sh'
   args:
