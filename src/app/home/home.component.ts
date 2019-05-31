@@ -6,6 +6,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 
 import * as firebase from 'firebase/app';
+import { AngularFirePerformance } from '@angular/fire/performance';
 
 @Component({
   selector: 'home',
@@ -74,12 +75,13 @@ export class HomeComponent implements OnInit {
   public articleViewCounts$: Observable<AngularFireAction<firebase.database.DataSnapshot>[]>;
   public isServer: Boolean;
 
-  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, @Inject(PLATFORM_ID) platformId) {
+  constructor(perf: AngularFirePerformance, afs: AngularFirestore, rtdb: AngularFireDatabase, @Inject(PLATFORM_ID) platformId) {
 
     this.isServer = isPlatformServer(platformId);
   
     this.articles$ = afs.collection('articles', ref => ref.orderBy('publishedAt', 'desc'))
       .snapshotChanges().pipe(
+        perf.trace('getArticles'),
         map(articles =>
           articles.map(article => {
             const id = article.payload.doc.id;

@@ -7,6 +7,8 @@ import { switchMap, map } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
 
 import {AngularFirestore} from '@angular/fire/firestore';
+import { AngularFirePerformance } from '@angular/fire/performance';
+import { AngularFireMessaging } from '@angular/fire/messaging';
 
 @Component({
   selector: 'author-view',
@@ -76,16 +78,11 @@ export class AuthorComponent implements OnInit {
   public author$: Observable<any>;
   public articles$: Observable<any[]>;
 
-  constructor(afs: AngularFirestore, route: ActivatedRoute) {
+  constructor(afm: AngularFireMessaging, afs: AngularFirestore, route: ActivatedRoute) {
 
     // WIP
     // Is this user subscribed to push notifications?
-    import('firebase/messaging').then(() => {
-      return firebase.messaging().getToken();
-    }).then(token => {
-      // TODO if they are, let's show a subscribe button
-      console.log(token);
-    })
+    afm.getToken.subscribe(console.log, console.error);
 
     this.author$ = route.params.pipe(switchMap(params =>
       afs.doc(`authors/${params['id']}`).valueChanges()

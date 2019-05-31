@@ -13,6 +13,7 @@ import {AngularFireDatabase} from '@angular/fire/database';
 import { isPlatformBrowser } from '@angular/common';
 
 import * as firebase from 'firebase/app';
+import { AngularFirePerformance } from '@angular/fire/performance';
 
 @Component({
   selector: 'article-view',
@@ -118,7 +119,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   public newCommentText: string = '';
   public isServer: Boolean;
 
-  constructor(afs: AngularFirestore, rtdb: AngularFireDatabase, route: ActivatedRoute, public afAuth: AngularFireAuth, @Inject(PLATFORM_ID) platformId) {
+  constructor(perf: AngularFirePerformance, afs: AngularFirestore, rtdb: AngularFireDatabase, route: ActivatedRoute, public afAuth: AngularFireAuth, @Inject(PLATFORM_ID) platformId) {
     this.isServer = isPlatformServer(platformId);
     
     this.profileRef$ = new BehaviorSubject(undefined);
@@ -136,9 +137,10 @@ export class ArticleComponent implements OnInit, OnDestroy {
           article['author'] = afs.doc(article['author'].path).snapshotChanges().pipe(map(author => author.payload));
         }
         return article;
-      },
+      }),
       distinctUntilChanged((a,b) => JSON.stringify(a) === JSON.stringify(b)),
-    ));
+      perf.trace('getArticle')
+    );
 
     this.viewCount$ = route.params.pipe(switchMap(params =>
       rtdb.object(`articleViewCount/${params['id']}`).valueChanges()

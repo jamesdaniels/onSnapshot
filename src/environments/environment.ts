@@ -11,6 +11,7 @@ export const environment = {
     databaseURL: "https://onsnapshot.firebaseio.com",
     projectId: "onsnapshot",
     storageBucket: "onsnapshot.appspot.com",
-    messagingSenderId: "77554050853"
+    messagingSenderId: "77554050853",
+    appId: "1:77554050853:web:fe5b5cfdb7162500"
   }
 };

@@ -18,32 +18,37 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "hosting": {
-    "public": "dist/onsnapshot",
-    "ignore": [
-      "index.html",
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "run": {
-          "serviceId": "universal"
+  "hosting": [
+    {
+      "target": "onsnapshot",
+      "public": "dist/onsnapshot",
+      "ignore": [
+        "index.html",
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "run": {
+            "serviceId": "universal"
+          }
         }
-      }
-    ],
-    "headers": [
-      {
-        "source" : "**/*.@(css|js)",
-        "headers" : [{
-          "key" : "Cache-Control",
-          "value" : "public, max-age=365000000, immutable"
-        }]
-      }
-    ]
-  },
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(css|js)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=365000000, immutable"
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "storage": {
     "rules": "storage.rules"
   }
