@@ -51,6 +51,7 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
+    "@angular-devkit/architect": "~0.800.0",
     "@angular-devkit/build-angular": "~0.800.0",
     "@angular/cli": "^8.0.0",
     "@angular/compiler-cli": "^8.0.0",
@@ -58,17 +59,17 @@
     "@types/node": "^8.0.30",
     "codelyzer": "^5.0.1",
     "cpy-cli": "^1.0.1",
+    "firebase-tools": "^6.10.0",
+    "first-input-delay": "^0.1.3",
+    "fuzzy": "^0.1.3",
     "http-server": "^0.10.0",
+    "inquirer": "^6.2.2",
+    "inquirer-autocomplete-prompt": "^1.0.1",
     "reflect-metadata": "^0.1.10",
     "sw-precache-webpack-plugin": "^0.11.4",
     "ts-loader": "^4.5.0",
     "typescript": "3.4.5",
     "uglifyjs-webpack-plugin": "^1.1.8",
-    "webpack-cli": "^3.1.2",
-    "@angular-devkit/architect": "~0.800.0",
-    "firebase-tools": "^6.10.0",
-    "fuzzy": "^0.1.3",
-    "inquirer": "^6.2.2",
-    "inquirer-autocomplete-prompt": "^1.0.1"
+    "webpack-cli": "^3.1.2"
   }
 }
