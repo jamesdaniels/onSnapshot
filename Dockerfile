@@ -2,11 +2,9 @@ FROM node:10
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm i
 COPY . .
 RUN npm run build:all
 
-RUN npm i -g firebase-tools@6.7.2
-
-CMD npm run serve:ssr
+CMD [ "npm", "run", "serve:ssr" ]

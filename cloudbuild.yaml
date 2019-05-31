@@ -1,7 +1,7 @@
 steps:
 # build the base image using Kaniko for caching
 - name: 'gcr.io/kaniko-project/executor:latest'
-  waitFor: '-'
+  waitFor: ['-']
   id: DOCKER_BUILD
   args:
   - --destination=gcr.io/$PROJECT_ID/universal:$BUILD_ID
@@ -17,21 +17,18 @@ steps:
   - --image=gcr.io/$PROJECT_ID/universal:$BUILD_ID
   - --region=us-central1
   id: DEPLOY_CLOUD_RUN
-  waitFor: DOCKER_BUILD
+  waitFor: ['DOCKER_BUILD']
 
 # deploy the Firebase application
-# TODO figure out why I have to NPM install again and rebuild
 - name: 'gcr.io/$PROJECT_ID/universal:$BUILD_ID'
+  dir: '/usr/src/app'
   id: DEPLOY_FIREBASE
   entrypoint: 'sh'
   args:
   - -c
-  - |
-    npm i
-    npm run build:prod
-    firebase deploy --token $$FIREBASE_TOKEN --non-interactive
-  secretEnv: FIREBASE_TOKEN
-  waitFor: DOCKER_BUILD
+  - ./node_modules/.bin/firebase deploy --token $$FIREBASE_TOKEN --non-interactive
+  secretEnv: ['FIREBASE_TOKEN']
+  waitFor: ['DOCKER_BUILD']
 
 # TODO Don't use token once fixed https://github.com/firebase/firebase-tools/issues/787
 secrets:
@@ -39,4 +36,7 @@ secrets:
   secretEnv:
     FIREBASE_TOKEN: CiQANB2PTWPbq51e04pCCFMfUT/K5rzni9Y9l8BouIMQy+h57d0SVwB0j9PfPkC7b8M67ffpuiU0HilpXr1TjuERtXIciRgvmvOCY8Yi8NjmW8835WZ3Q4b5IwfzdRky9F8KzqpszAz4gW94Rj7vSmTkln6rx+g2nNkXmPYyng==
 
-images: gcr.io/$PROJECT_ID/universal
+images:
+- gcr.io/$PROJECT_ID/universal
+
+timeout: 1200s
